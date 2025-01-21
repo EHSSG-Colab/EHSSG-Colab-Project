@@ -1,3 +1,9 @@
+# Table of Contents
+* [Project Specifications](#internship-project-specifications)
+* [Guide guide](#git-guide)
+
+***
+
 # Internship Project Specifications
 ## Introduction
 The application aims to help local community and health network track and manage malaria cases in local communities. This mobile application and web dashboard will replace paper-based reporting systems to improve data accuracy and response time.
@@ -206,7 +212,7 @@ Role based access control to be carried out in web platform. Will include:
 
 ***
 
-# Git CLI setup
+# Git Guide
 
 ## Download Git Command Line Interface (CLI)
 * Go to git-scm.com

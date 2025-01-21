@@ -203,3 +203,102 @@ Role based access control to be carried out in web platform. Will include:
 ### Phase 3 Advanced features
 * Automated alerts
 * Data analysis
+
+***
+
+# Git CLI setup
+
+## Download Git Command Line Interface (CLI)
+* Go to git-scm.com
+* Go to Windows
+* Click Download for Windows
+* Download installer file
+
+## Git Installation
+* Double click to open Git installer
+* Click next and next (you can use default settings)
+* Select Visual Studio Code as the default editor used by git
+* Click Next and leave others as default
+* Click Install
+* Click Finish to complete the installation
+
+## Git initial configuration
+* Open Git bash from start menu
+* Configure git with following commands:
+```bash
+git config --global user.name "your git username"
+```
+
+```bash
+git config --global user.email "your git email"
+```
+* Close the terminal by entering `exit`
+
+## Cloning this repository
+This project is built with Laravel and make sure you have installed Laravel Herd. Check whether you have completed installing Laravel Herd by visiting:
+`C:/<your username>/Herd` from your Windows Explorer. While you're in Windows Explorer and in this directory: `C:/<your username>/Herd/`, go to address bar, select all and type `cmd`. Hit enter to open a command prompt window at this directory.
+Enter the following command:
+```bash
+git clone https://github.com/EHSSG-Colab/EHSSG-Colab-Project.git
+```
+Then change directory
+```bash
+cd EHSSG-Colab-Project
+```
+Open the project from the VSCode
+```bash
+code ./
+```
+
+## Creating new branch
+The main branch of the repository should be the most stable version with minimal bugs. Whenever you starting working on a new feature, you need to create a new feature branch rather than committing directly on the `main`.
+To create a new branch, first checkout the `main`.
+```bash
+git checkout main
+```
+Then pull from main before creating a new branch.
+```bash
+git pull origin main
+```
+Create your new feature branch:
+```bash
+git checkout -b <branch-name>
+```
+You can check your current branch with:
+```bash
+git branch
+```
+
+## Commit and Push your branch
+After you have done contributing the project for the day, you need to `add`, `commit` and `push` your work to the remote repository.
+To add your updated work to the staging area, run:
+```bash
+git add .
+```
+Then commit your updates with commit message inside double quotes.
+```bash
+git commit -m "your commit message"
+```
+Finally, push your updates to your feature branch.
+```bash
+git push -u origin <branch-name>
+```
+If you are pushing it for the first time, you'll be ask to log in your github account. After logging in, the push process to your remote branch is completed.
+
+## Creating a Pull Request
+Unless your updates were merged to `main` branch, your contribution stays in your own branch. After making sure your feature branch is working as expected and thoroughly checked, you can create a pull request to merge your branch to `main`.
+* Go to [Github](https://github.com) and inside your organization, go to the [repository](https://github.com/EHSSG-Colab/EHSSG-Colab-Project).
+* Go to Pull requests tab and click New Pull Request.
+* Select your feature branch
+* Write a PR message in pull request descriptino
+* Click create pull request
+
+## General Rules
+* Keep your main branch up-to-date by `git pull origin main` before starting to code
+* Write clear commit messages
+* In case merge conflicts occured, manage them locally and push.
+
+## If you need help
+- Open a new issue using issue tracker
+- Mention repository maintainers using (@username)
+- Or write a comment under a Pull request

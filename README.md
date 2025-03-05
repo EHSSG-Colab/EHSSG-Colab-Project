@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Table of Contents
 * [Project Specifications](#internship-project-specifications)
 * [Guide guide](#git-guide)

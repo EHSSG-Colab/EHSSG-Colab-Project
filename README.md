@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Table of Contents
 * [Project Specifications](#internship-project-specifications)
 * [Guide guide](#git-guide)
@@ -308,3 +309,8 @@ Unless your updates were merged to `main` branch, your contribution stays in you
 - Open a new issue using issue tracker
 - Mention repository maintainers using (@username)
 - Or write a comment under a Pull request
+=======
+# malaria_report_mobile
+
+A new Flutter project.
+>>>>>>> c6c81e8 (Flutter Committ)

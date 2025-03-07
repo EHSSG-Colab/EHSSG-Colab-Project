@@ -11,6 +11,18 @@ class NavWrapper extends StatefulWidget {
 }
 
 class _NavWrapperState extends State<NavWrapper> {
+  // selectedIndex is the value selected by the user. When the user press a menu item, its index value will be stored here.
+  // Since the user is not pressing any menu item when the page loads, the selectedIndex is initially 0.
+  int _selectedIndex = 0;
+
+  // This method updates the selectedIndex value based on the user activity
+  void _onItemTapped(int index){
+    setState((){
+      _selectedIndex = index;
+    });
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return const Placeholder();

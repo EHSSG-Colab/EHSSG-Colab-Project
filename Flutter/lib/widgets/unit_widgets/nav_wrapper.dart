@@ -33,7 +33,7 @@ class _NavWrapperState extends State<NavWrapper> {
 
   // list of pages to be added under navigation menu items
   final List _pages = [
-    
+    Home(),
   ];
 
   @override

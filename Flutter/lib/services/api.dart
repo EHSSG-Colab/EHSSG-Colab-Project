@@ -13,10 +13,7 @@ class ApiService {
   // constructor class is refactored. Made the token optional as the new user may not have a token during the first time login.
   ApiService({this.token = ''});
 
-  final String baseUrl =
-      // 'https://9ebpir2cpn.sharedwithexpose.com/api/'; // replace with your laravel herd url
-      'http://localhost:8000/api/'; // replace with your laravel herd url
-
+  final String baseUrl = 'https://super-duper-space-capybara-767qgr6pxj6hx96g-8000.app.github.dev/api/';
   Future<void> login(String email, String password) async {
     String uri = '${baseUrl}login';
 

@@ -22,7 +22,20 @@ class _NavWrapperState extends State<NavWrapper> {
     });
   }
 
-  
+  // the initState method called on page load by default
+  @override
+  void initState(){
+    super.initState();
+
+    // redirect to specific page if provided
+    _selectedIndex = widget.initialIndex;
+  }
+
+  // list of pages to be added under navigation menu items
+  final List _pages = [
+    
+  ];
+
   @override
   Widget build(BuildContext context) {
     return const Placeholder();

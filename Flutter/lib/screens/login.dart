@@ -156,7 +156,7 @@ class _LoginState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Developed by <YOUR NAME>.',
+          'Developed by EHSSG Internship.',
           style: TextStyle(fontSize: 10),
           textAlign: TextAlign.center,
         ),

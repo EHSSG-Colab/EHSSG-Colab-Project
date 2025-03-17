@@ -38,4 +38,4 @@ flutter:
         - asset: assets/fonts/Urbanist.ttf
   assets:
     - assets/images/logo.png
-      
+    - assets/images/cliniclogo.jpg  

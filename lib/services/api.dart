@@ -15,7 +15,7 @@ class ApiService {
   }
 
   final String baseUrl =
-      'https://9ebpir2cpn.sharedwithexpose.com/api/'; // replace with your laravel herd url
+      'https://yjj2cfyplc.sharedwithexpose.com/api/'; // replace with your laravel herd url
 
   Future login(String email, String password) async {
     String uri = '${baseUrl}login';

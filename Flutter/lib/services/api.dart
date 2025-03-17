@@ -12,7 +12,7 @@ class ApiService {
   // constructor class is refactored. Made the token optional as the new user may not have a token during the first time login.
   ApiService({this.token = ''});
 
-  final String baseUrl = 'http://localhost:8000/api/';
+  final String baseUrl = 'http://172.20.20.209:8000/api/';
   Future<void> login(String email, String password) async {
     String uri = '${baseUrl}login';
 

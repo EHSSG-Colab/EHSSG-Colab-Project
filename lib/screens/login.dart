@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:malaria_report_mobile/providers/api_response.dart';
 import 'package:malaria_report_mobile/providers/auth/auth_provider.dart';
 import 'package:malaria_report_mobile/services/network_check.dart';
+import 'package:malaria_report_mobile/services/shared_preferences.dart';
 import 'package:malaria_report_mobile/themes/app_theme.dart';
 import 'package:malaria_report_mobile/widgets/layouts/scaffold_for_scroll_view.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/elevated_button.dart';
@@ -53,8 +55,12 @@ class _LoginState extends State<Login> {
   Widget buildLoginGraphic() {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
-      child: Image.asset('assets/images/logo.png',
-          width: 300, height: 150, fit: BoxFit.contain),
+      child: Image.asset(
+        'assets/images/logo.png',
+        width: 300,
+        height: 150,
+        fit: BoxFit.contain,
+      ),
     );
   }
 
@@ -85,46 +91,50 @@ class _LoginState extends State<Login> {
 
   Widget buildLoginDescription() {
     return const Text(
-        'Please login with the user account created at Malaria Case Report Web Application.');
+      'Please login with the user account created at Malaria Case Report Web Application.',
+    );
   }
 
   Widget buildLoginForm() {
     return Form(
       key: _formKey,
-      child: Column(children: [
-        MyTextFormField(
-          myController: emailController,
-          keyboardType: TextInputType.emailAddress,
-          labelText: 'Email',
-          validator: (String? value) {
-            if (value!.trim().isEmpty) {
-              return 'Please enter email';
-            }
-            return null;
-          },
-        ),
-        sizedBoxh10(),
-        MyPasswordFormField(
-          myController: passwordController,
-          labelText: 'Password',
-          validator: (String? value) {
-            if (value!.trim().isEmpty) {
-              return 'Please enter passsword';
-            }
-            return null;
-          },
-        ),
-        sizedBoxh10(),
-        MyButton(
-          buttonLabel: 'Log In',
-          onPressed: () {
-            submit();
-          },
-          backgroundColor:
-              WidgetStatePropertyAll(AppTheme().secondaryColor()),
-        ),
-        Text(errorMessage, style: TextStyle(color: AppTheme().rosyColor())),
-      ]),
+      child: Column(
+        children: [
+          MyTextFormField(
+            myController: emailController,
+            keyboardType: TextInputType.emailAddress,
+            labelText: 'Email',
+            validator: (String? value) {
+              if (value!.trim().isEmpty) {
+                return 'Please enter email';
+              }
+              return null;
+            },
+          ),
+          sizedBoxh10(),
+          MyPasswordFormField(
+            myController: passwordController,
+            labelText: 'Password',
+            validator: (String? value) {
+              if (value!.trim().isEmpty) {
+                return 'Please enter passsword';
+              }
+              return null;
+            },
+          ),
+          sizedBoxh10(),
+          MyButton(
+            buttonLabel: 'Log In',
+            onPressed: () {
+              submit();
+            },
+            backgroundColor: WidgetStatePropertyAll(
+              AppTheme().secondaryColor(),
+            ),
+          ),
+          Text(errorMessage, style: TextStyle(color: AppTheme().rosyColor())),
+        ],
+      ),
     );
   }
 
@@ -135,10 +145,41 @@ class _LoginState extends State<Login> {
     }
     if (await NetworkCheck.isConnected()) {
       EasyLoading.show(status: 'logging in...');
-      final AuthProvider provider =
-          Provider.of<AuthProvider>(context, listen: false);
+      final AuthProvider provider = Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      );
       try {
+        // final apiResponse =
         await provider.login(emailController.text, passwordController.text);
+
+        ApiResponse? userInfo = await SharedPrefService.getUserApiInfo();
+        if (userInfo != null) {
+          print('User ID: ${userInfo.apiUserId}');
+          print('Username: ${userInfo.apiUsername}');
+          print('Email: ${userInfo.apiEmail}');
+          print('Township: ${userInfo.apiTownship}');
+          print('Token: ${userInfo.token}');
+        }
+        // String userId = await SharedPrefService.getApiUserId();
+        // String username = await SharedPrefService.getApiUsername();
+        // String email = await SharedPrefService.getApiEmail();
+        // String township = await SharedPrefService.getApiTownship();
+        // String token = await SharedPrefService.getApiToken();
+
+        // print('Username: ${apiResponse.apiUsername}');
+        // print('Email: ${apiResponse.apiEmail}');
+        // print('User ID: ${apiResponse.apiUserId}');
+        // print('Township: ${apiResponse.township}');
+
+        // // Assuming apiResponse contains user information
+        // await SharedPrefService.storeUserApiInfo(
+        //   username: apiResponse.username,
+        //   email: apiResponse.email,
+        //   userId: apiResponse.userId,
+        //   township: apiResponse.township,
+        // );
+
         EasyLoading.showSuccess('Logged in successfully!');
       } catch (Exception) {
         setState(() {
@@ -147,7 +188,7 @@ class _LoginState extends State<Login> {
         });
       }
     } else {
-      return EasyLoading.showError('No Internet Connection');
+      EasyLoading.showError('No Internet Connection');
     }
   }
 
@@ -156,7 +197,7 @@ class _LoginState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Developed by <YOUR NAME>.',
+          'Developed by EHSSG Internship.',
           style: TextStyle(fontSize: 10),
           textAlign: TextAlign.center,
         ),
@@ -164,3 +205,62 @@ class _LoginState extends State<Login> {
     );
   }
 }
+  //      Future<void> submit() async {
+  //   final form = _formKey.currentState;
+  //   if (!form!.validate()) {
+  //     return;
+  //   }
+  //   if (await NetworkCheck.isConnected()) {
+  //     EasyLoading.show(status: 'logging in...');
+  //     final AuthProvider provider =
+  //         Provider.of<AuthProvider>(context, listen: false);
+  //     try {
+  //       final apiResponse = await provider.login(emailController.text, passwordController.text);
+
+  //       // Store user information from API response
+  //       await SharedPrefService.storeUserApiInfo(
+  //         username: apiResponse.username,
+  //         email: apiResponse.email,
+  //         userId: apiResponse.userId,
+  //         township: apiResponse.township,
+  //       );
+
+  //       EasyLoading.showSuccess('Logged in successfully!');
+  //     } catch (Exception) {
+  //       setState(() {
+  //         errorMessage = Exception.toString().replaceAll('Exception: ', '');
+  //         EasyLoading.showError(errorMessage);
+  //       });
+  //     }
+  //   } else {
+  //     return EasyLoading.showError('No Internet Connection');
+  //   }
+  // }
+  // final response = await provider.login(emailController.text, passwordController.text);
+  // final userData = response.data; // Assuming response has a data property
+
+  // // Store user information from API response
+  // await SharedPrefService.storeUserApiInfo(
+  //   username: userData['name'] ?? '', // adjust field names according to your API
+  //   email: emailController.text,
+  //   userId: userData['id']?.toString() ?? '',
+  //   township: userData['township'] ?? '',
+  // );
+
+  // EasyLoading.showSuccess('Logged in successfully!');
+  // // Navigate to home screen or dashboard
+  // Navigator.pushReplacementNamed(context, '/home');
+
+//   Widget buildCopyrightMessage() {
+//     return const Row(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         Text(
+//           'Developed by <YOUR NAME>.',
+//           style: TextStyle(fontSize: 10),
+//           textAlign: TextAlign.center,
+//         ),
+//       ],
+//     );
+//   }
+// }

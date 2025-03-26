@@ -8,37 +8,42 @@ class MyButton extends StatelessWidget {
     required this.onPressed,
     this.backgroundColor,
     this.outlined = false,
+    this.isVisible = true,
   });
   final String buttonLabel;
   final void Function() onPressed;
   final WidgetStateProperty<Color?>? backgroundColor;
   final bool outlined;
+  final bool isVisible;
 
   // button loading status
   final bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        textStyle: AppTheme().buttonLabel(),
-        backgroundColor:
-            outlined ? Colors.transparent : AppTheme().secondaryColor(),
-        foregroundColor:
-            outlined
-                ? AppTheme().secondaryColor()
-                : AppTheme().primaryLightColor(),
-        side: BorderSide(
-          color:
+    return Visibility(
+      visible: isVisible,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          textStyle: AppTheme().buttonLabel(),
+          backgroundColor:
+              outlined ? Colors.transparent : AppTheme().secondaryColor(),
+          foregroundColor:
               outlined
                   ? AppTheme().secondaryColor()
-                  : AppTheme().transparentColor(),
+                  : AppTheme().primaryLightColor(),
+          side: BorderSide(
+            color:
+                outlined
+                    ? AppTheme().secondaryColor()
+                    : AppTheme().transparentColor(),
+          ),
+          elevation: outlined ? 0 : null,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        elevation: outlined ? 0 : null,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Text(buttonLabel),
       ),
-      child: Text(buttonLabel),
     );
   }
 }

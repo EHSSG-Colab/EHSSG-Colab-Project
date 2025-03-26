@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:malaria_report_mobile/providers/auth/auth_provider.dart';
-import 'package:malaria_report_mobile/providers/auth/malaria_provider.dart';
-import 'package:malaria_report_mobile/providers/auth/profile_provider.dart';
-import 'package:malaria_report_mobile/providers/auth/volunteer_provider.dart';
+import 'package:malaria_report_mobile/providers/malaria_provider.dart';
+import 'package:malaria_report_mobile/providers/profile_provider.dart';
+import 'package:malaria_report_mobile/providers/volunteer_provider.dart';
 import 'package:malaria_report_mobile/screens/login.dart';
 import 'package:malaria_report_mobile/themes/app_theme.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/nav_wrapper.dart';

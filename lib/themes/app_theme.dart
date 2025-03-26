@@ -71,6 +71,10 @@ class AppTheme {
     return const Color.fromARGB(255, 82, 82, 82);
   }
 
+  Color disabledTextColor() {
+    return const Color.fromARGB(255, 172, 172, 172);
+  }
+
   Color ehssgOrangeColor() {
     return const Color.fromARGB(255, 255, 178, 84);
   }

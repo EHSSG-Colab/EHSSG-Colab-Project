@@ -1,0 +1,179 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:malaria_case_report_01/provider/auth/auth_provider.dart';
+import 'package:malaria_case_report_01/services/network_check.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
+import 'package:malaria_case_report_01/widgets/layouts/scaffold_for_scroll_view.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/elevated_button.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/text_form_field.dart';
+
+import 'package:provider/provider.dart';
+
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  String errorMessage = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldForScrollView(
+      canPop: false,
+      children: [
+        buildAppTitle(),
+        buildLoginGraphic(),
+        sizedBoxh20(),
+        buildLoginColumn(),
+      ],
+    );
+  }
+
+  Widget buildAppTitle() {
+    return Container(
+      width: double.infinity,
+      height: 100,
+      alignment: const AlignmentDirectional(-1, 0),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(32, 0, 0, 0),
+        child: Text(
+          'Malaria Case Report',
+          style: Theme.of(context).textTheme.displayMedium,
+        ),
+      ),
+    );
+  }
+
+  Widget buildLoginGraphic() {
+    return Align(
+      alignment: const AlignmentDirectional(0, 0),
+      child: Image.asset(
+        'assets/images/health_care_logo.png',
+        width: 300,
+        height: 200,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget buildLoginColumn() {
+    return Container(
+      width: double.infinity,
+      alignment: const AlignmentDirectional(-1, 0),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(32, 0, 32, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildLoginText(),
+            sizedBoxh10(),
+            buildLoginDescription(),
+            sizedBoxh10(),
+            buildLoginForm(),
+
+            buildCopyrightMessage(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildLoginText() {
+    return Text('Login', style: Theme.of(context).textTheme.displayLarge);
+  }
+
+  Widget buildLoginDescription() {
+    return const Text(
+      'Please login with the user account created at Malaria Case Report Web Application.',
+    );
+  }
+
+  Widget buildLoginForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          MyTextFormField(
+            myController: emailController,
+            keyboardType: TextInputType.emailAddress,
+            labelText: 'Email',
+            validator: (String? value) {
+              if (value!.trim().isEmpty) {
+                return 'Please enter email';
+              }
+              return null;
+            },
+          ),
+          sizedBoxh10(),
+          MyPasswordFormField(
+            myController: passwordController,
+            labelText: 'Password',
+            validator: (String? value) {
+              if (value!.trim().isEmpty) {
+                return 'Please enter passsword';
+              }
+              return null;
+            },
+          ),
+          sizedBoxh10(),
+          MyButton(
+            buttonLabel: 'Log In',
+            onPressed: () {
+              submit();
+            },
+            backgroundColor: WidgetStatePropertyAll(
+              AppTheme().secondaryColor(),
+            ),
+          ),
+          Text(errorMessage, style: TextStyle(color: AppTheme().rosyColor())),
+        ],
+      ),
+    );
+  }
+
+  Future<void> submit() async {
+    final form = _formKey.currentState;
+    if (!form!.validate()) {
+      return;
+    }
+    if (await NetworkCheck.isConnected()) {
+      EasyLoading.show(status: 'logging in...');
+      final AuthProvider provider = Provider.of<AuthProvider>(
+        // ignore: use_build_context_synchronously
+        context,
+        listen: false,
+      );
+      try {
+        await provider.login(emailController.text, passwordController.text);
+        EasyLoading.showSuccess('Logged in successfully!');
+        // ignore: avoid_types_as_parameter_names
+      } catch (Exception) {
+        setState(() {
+          errorMessage = Exception.toString().replaceAll('Exception: ', '');
+          EasyLoading.showError(errorMessage);
+        });
+      }
+    } else {
+      return EasyLoading.showError('No Internet Connection');
+    }
+  }
+
+  Widget buildCopyrightMessage() {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Developed by <YOUR NAME>.',
+          style: TextStyle(fontSize: 10),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+}

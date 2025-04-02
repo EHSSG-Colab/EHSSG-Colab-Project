@@ -14,7 +14,7 @@ class ApiService {
     this.token = token;
   }
 
-  final String baseUrl = 'https://z5meen0qec.sharedwithexpose.com/api/';
+  final String baseUrl = 'http://192.168.1.4:8000/api/';
 
   Future<void> login(String email, String password) async {
     String uri = '${baseUrl}login';

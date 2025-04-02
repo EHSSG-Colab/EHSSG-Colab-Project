@@ -5,6 +5,7 @@ import 'package:malaria_case_report_01/provider/malaria_provider.dart';
 import 'package:malaria_case_report_01/provider/profile_provider.dart';
 import 'package:malaria_case_report_01/provider/volunteer_provider.dart';
 import 'package:malaria_case_report_01/screens/login.dart';
+import 'package:malaria_case_report_01/screens/update_profile.dart';
 import 'package:malaria_case_report_01/themes/app_theme.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/nav_wrapper.dart';
 
@@ -30,8 +31,11 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (context) => VolunteerProvider()),
               ChangeNotifierProvider(create: (context) => MalariaProvider()),
             ],
-            child: MaterialApp(
+            child: Consumer<ProfileProvider>(
+              builder: (BuildContext context, ProfileProvider value, Widget? child) {
+              return MaterialApp(
               title: 'Malaria Case Report',
+              initialRoute: '/',
               // register routes here so that we can call route names instead of full class names during navigation
               routes: {
                 // the landing screen
@@ -41,11 +45,20 @@ class MyApp extends StatelessWidget {
                   final authProvider = Provider.of<AuthProvider>(
                     context,
                   ); // get the auth provider
-                  if (authProvider.isAuthenticated) {
-                    return const NavWrapper();
-                  } else {
+
+                  final profileProvider = Provider.of<ProfileProvider>(context, listen: false); // get the profile provider
+                  
+                  // redirect to login if not logged in
+                  if (!authProvider.isAuthenticated) {
                     return Login();
                   }
+                  // redirect to update profile if profile information is not complete
+                  if (!profileProvider.isProfileComplete) {
+                    return UpdateProfile(navigateToIndex: 1);
+                  }
+
+                  // Otherwise return the Navwrapper
+                  return const NavWrapper();
                 },
               },
               theme: ThemeData(
@@ -64,6 +77,8 @@ class MyApp extends StatelessWidget {
               ),
               debugShowCheckedModeBanner: false,
               builder: EasyLoading.init(),
+              );
+            }
             ),
           );
         },

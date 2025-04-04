@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_report_mobile/providers/api_response.dart';
 import 'package:malaria_report_mobile/providers/auth/auth_provider.dart';
 import 'package:malaria_report_mobile/services/network_check.dart';
-import 'package:malaria_report_mobile/services/shared_preferences.dart';
 import 'package:malaria_report_mobile/themes/app_theme.dart';
 import 'package:malaria_report_mobile/widgets/layouts/scaffold_for_scroll_view.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/elevated_button.dart';
@@ -153,14 +151,14 @@ class _LoginState extends State<Login> {
         // final apiResponse =
         await provider.login(emailController.text, passwordController.text);
 
-        ApiResponse? userInfo = await SharedPrefService.getUserApiInfo();
-        if (userInfo != null) {
-          print('User ID: ${userInfo.apiUserId}');
-          print('Username: ${userInfo.apiUsername}');
-          print('Email: ${userInfo.apiEmail}');
-          print('Township: ${userInfo.apiTownship}');
-          print('Token: ${userInfo.token}');
-        }
+        // ApiResponse? userInfo = await SharedPrefService.getUserApiInfo();
+        // if (userInfo != null) {
+        //   print('User ID: ${userInfo.apiUserId}');
+        //   print('Username: ${userInfo.apiUsername}');
+        //   print('Email: ${userInfo.apiEmail}');
+        //   print('Township: ${userInfo.apiTownship}');
+        //   print('Token: ${userInfo.token}');
+        // }
         // String userId = await SharedPrefService.getApiUserId();
         // String username = await SharedPrefService.getApiUsername();
         // String email = await SharedPrefService.getApiEmail();

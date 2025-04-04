@@ -1,53 +1,96 @@
-import 'dart:convert';
-
-import 'package:malaria_report_mobile/providers/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class SharedPrefService {
+  // Save API token
   Future<void> setToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
+    print('Token saved: $token');
   }
 
+  // Retrieve API token
   Future<String> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token') ?? '';
+    final token = prefs.getString('token') ?? '';
+    print('Retrieved token: $token');
+    return token;
   }
 
+  // Save user ID
   Future<void> setUserId(int userId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('userId', userId);
+    print('User ID saved: $userId');
   }
 
+  // Retrieve user ID
   Future<int> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userId') ?? 0;
+    final userId = prefs.getInt('userId') ?? 0;
+    print('Retrieved user ID: $userId');
+    return userId;
   }
 
+  // Save user name
   Future<void> setName(String name) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('name', name);
+    await prefs.setString('userName', name);
+    print('User name saved: $name');
   }
 
+  // Retrieve user name
   Future<String> getName() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('name') ?? '';
+    final name = prefs.getString('userName') ?? '';
+    print('Retrieved user name: $name');
+    return name;
   }
 
-  static Future<Map<String, dynamic>> getUserInfo() async {
+  // Save all login data (token, userId, userName)
+  Future<void> saveLoginData({
+    required String token,
+    required int userId,
+    required String userName,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
-    return {
-      'userId': prefs.getString('userId'),
-      'userName': prefs.getString('userName'),
-      'userTownship': prefs.getString('userTownship'),
-      'userVillage': prefs.getString('userVillage'),
-      'villageNotFound': prefs.getBool('villageNotFound') ?? false,
-      'userOtherVillage': prefs.getString('userOtherVillage'),
-    };
+    await prefs.setString('token', token);
+    await prefs.setInt('userId', userId);
+    await prefs.setString('userName', userName);
+    print(
+      'Login data saved: {token: $token, userId: $userId, userName: $userName}',
+    );
   }
 
-  // save user info
+  // Save email
+  Future<void> setEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    print('Email saved: $email');
+  }
+
+  // Retrieve email
+  Future<String> getEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    print('Retrieved email: $email');
+    return email;
+  }
+
+  // Retrieve all login data
+  Future<Map<String, dynamic>> getLoginData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final loginData = {
+      'token': prefs.getString('token') ?? '',
+      'userId': prefs.getInt('userId') ?? 0,
+      'userName': prefs.getString('userName') ?? '',
+      'email': prefs.getString('email') ?? '',
+    };
+    print('Retrieved login data: $loginData');
+    return loginData;
+  }
+
+  // Save profile details
   static Future<void> saveUserInfo({
     required String userName,
     required String userTownship,
@@ -62,137 +105,75 @@ class SharedPrefService {
     await prefs.setBool('villageNotFound', villageNotFound);
     await prefs.setString('userOtherVillage', userOtherVillage);
 
-
-
-
-
-
-    // Check if userId exists, if not, generate and save it
+    // Generate and save userId if it doesn't exist
     if (prefs.getString('userId') == null) {
       final userId = const Uuid().v4();
       await prefs.setString('userId', userId);
+      print('Generated and saved user ID: $userId');
     }
+
+    print(
+      'Profile details saved: {userName: $userName, userTownship: $userTownship, userVillage: $userVillage, villageNotFound: $villageNotFound, userOtherVillage: $userOtherVillage}',
+    );
   }
 
-  static const String _apiUserKey = 'api_user_info'; // Key for storing API info
-
-  // Save API User Info in SharedPreferences
-  static Future<void> storeUserApiInfo(ApiResponse apiResponse) async {
+  // Retrieve profile details
+  static Future<Map<String, dynamic>> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    String jsonData = jsonEncode(apiResponse.toJson()); // Convert to JSON string
-    await prefs.setString(_apiUserKey, jsonData);
+    final userInfo = {
+      'userId': prefs.getString('userId') ?? '',
+      'userName': prefs.getString('userName') ?? '',
+      'userTownship': prefs.getString('userTownship') ?? '',
+      'userVillage': prefs.getString('userVillage') ?? '',
+      'villageNotFound': prefs.getBool('villageNotFound') ?? false,
+      'userOtherVillage': prefs.getString('userOtherVillage') ?? '',
+    };
+    print('Retrieved profile details: $userInfo');
+    return userInfo;
   }
 
-  // Retrieve API User Info from SharedPreferences
-  static Future<ApiResponse?> getUserApiInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? jsonData = prefs.getString(_apiUserKey);
+  // Save volunteer details
+  static Future<void> saveVolunteerInfo({
+    required String volunteerName,
+    required String volunteerTownship,
+    required String volunteerVillage,
     
-    if (jsonData == null) return null; // Return null if no data is found
-
-    Map<String, dynamic> userMap = jsonDecode(jsonData);
-    return ApiResponse.fromJson(userMap); // Convert JSON to ApiResponse object
-  }
-
-  // Clear user API info on logout
-  static Future<void> clearUserApiInfo() async {
+  }) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_apiUserKey);
-  }
-
-  // Individual Getters (Retrieve specific user details)
-  static Future<String> getApiUserId() async {
-    ApiResponse? apiResponse = await getUserApiInfo();
-    return apiResponse?.apiUserId ?? '';
-  }
-
-  static Future<String> getApiUsername() async {
-    ApiResponse? apiResponse = await getUserApiInfo();
-    return apiResponse?.apiUsername ?? '';
-  }
-
-  static Future<String> getApiEmail() async {
-    ApiResponse? apiResponse = await getUserApiInfo();
-    return apiResponse?.apiEmail ?? '';
-  }
-
-  static Future<String> getApiTownship() async {
-    ApiResponse? apiResponse = await getUserApiInfo();
-    return apiResponse?.apiTownship ?? '';
-  }
-
-  static Future<String> getApiToken() async {
-    ApiResponse? apiResponse = await getUserApiInfo();
-    return apiResponse?.token ?? '';
-  }
-
-  // Individual Setters
-  // static Future<void> setApiUserId(String userId) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('api_user_id', userId);
-  // }
-
-  // static Future<void> setApiUsername(String username) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('api_username', username);
-  // }
-
-  // static Future<void> setApiEmail(String email) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('api_email', email);
-  // }
-
-  // static Future<void> setApiTownship(String township) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('api_township', township);
-  // }
-
-  // // Individual Getters
-  // static Future<String> getApiUserId() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('api_user_id') ?? '';
-  // }
-
-  // static Future<String> getApiUsername() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('api_username') ?? '';
-  // }
-
-  // static Future<String> getApiEmail() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('api_email') ?? '';
-  // }
-
-  // static Future<String> getApiTownship() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('api_township') ?? '';
-  // }
-
-  
-
-
-  // static Future<void> storeUserApiInfo( {
-  //     required String apiUserId,
-  //     required String apiUsername,
-  //     required String apiEmail,
-  //     required String apitownship,
-  // }) async{
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('api_user_id', apiUserId);
+    await prefs.setString('volunteerName', volunteerName);
+    await prefs.setString('volunteerTownship', volunteerTownship);
+    await prefs.setString('volunteerVillage', volunteerVillage);
     
-  //   await prefs.setString('api_username', apiUsername);
-  //   await prefs.setString('api_email', apiEmail);
-  //   await prefs.setString('api_township',apitownship);
-  // }
 
-  // //get user api information
-  // static Future<Map<String,String?>> getUserApiInfo() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return{
-  //     'userId' : prefs.getString('api_user_id'),
-  //     'username' : prefs.getString('api_username'),
-  //     'email' : prefs.getString('api_email'),
-  //     'township' : prefs.getString('api_township'),
-  //   };
-  // }
+    // Generate and save userId if it doesn't exist
+    if (prefs.getString('volunteerId') == null) {
+      final volunteerId = const Uuid().v4();
+      await prefs.setString('volunteerId', volunteerId);
+      print('Generated and saved volunteer ID: $volunteerId');
+    }
+
+    print(
+      'Volunteer details saved: {userName: $volunteerName, userTownship: $volunteerTownship, userVillage: $volunteerVillage,}',
+    );
+  }
+
+  // Retrieve volunteer details
+  static Future<Map<String, dynamic>> getvolunteerInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final volunteerInfo = {
+      'volunteerId': prefs.getString('volunteerId') ?? '',
+      'volunteerName': prefs.getString('volunteerName') ?? '',
+      'volunteerTownship': prefs.getString('volunteerTownship') ?? '',
+      'volunteerVillage': prefs.getString('volunteerVillage') ?? '',
+      
+    };
+    print('Retrieved volunteer details: $volunteerInfo');
+    return volunteerInfo;
+  }
+  // Clear all data
+  static Future<void> clearAllData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    print('All data cleared.');
+  }
 }

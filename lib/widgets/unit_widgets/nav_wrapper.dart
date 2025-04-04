@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:malaria_report_mobile/screens/home.dart';
 import 'package:malaria_report_mobile/screens/info.dart';
 import 'package:malaria_report_mobile/screens/profile_detail.dart';
-import 'package:malaria_report_mobile/screens/volunteers.dart';
 import 'package:malaria_report_mobile/themes/app_icons.dart';
 import 'package:malaria_report_mobile/themes/app_theme.dart';
+
+import '../../screens/volunteers.dart';
 
 class NavWrapper extends StatefulWidget {
   

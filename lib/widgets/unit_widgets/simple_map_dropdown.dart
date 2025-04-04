@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:malaria_report_mobile/themes/app_icons.dart';
-import 'package:malaria_report_mobile/themes/app_theme.dart';
+import '../../themes/app_icons.dart';
+import '../../themes/app_theme.dart';
 
 class SimpleMapSelect extends StatefulWidget {
   final List<Map<String, dynamic>> options;
@@ -15,19 +15,20 @@ class SimpleMapSelect extends StatefulWidget {
   final bool isRequired;
   final String labelKey;
   final String valueKey;
-  const SimpleMapSelect(
-      {super.key,
-      required this.options,
-      required this.label,
-      this.placeholder,
-      this.disabledHintText,
-      this.initialValue,
-      required this.onSelected,
-      this.validator,
-      this.disabled = false,
-      this.isRequired = false,
-      required this.labelKey,
-      required this.valueKey});
+  const SimpleMapSelect({
+    super.key,
+    required this.options,
+    required this.label,
+    this.placeholder,
+    this.disabledHintText,
+    this.initialValue,
+    required this.onSelected,
+    this.validator,
+    this.disabled = false,
+    this.isRequired = false,
+    required this.labelKey,
+    required this.valueKey,
+  });
 
   @override
   State<SimpleMapSelect> createState() => _SimpleMapSelectState();
@@ -40,6 +41,12 @@ class _SimpleMapSelectState extends State<SimpleMapSelect> {
   void initState() {
     super.initState();
     _selectedValue = widget.initialValue;
+  }
+
+  // Helper method to check if the selected value exists in options
+  bool _valueExistsInOptions(String? value) {
+    if (value == null) return false;
+    return widget.options.any((option) => option[widget.valueKey].toString() == value);
   }
 
   @override
@@ -72,7 +79,8 @@ class _SimpleMapSelectState extends State<SimpleMapSelect> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButtonFormField<String>(
-                  value: _selectedValue,
+                  // Only set value if it exists in the options list
+                  value: _valueExistsInOptions(_selectedValue) ? _selectedValue : null,
                   hint: Text(
                     widget.placeholder ?? 'Select an option',
                     style: TextStyle(
@@ -99,40 +107,50 @@ class _SimpleMapSelectState extends State<SimpleMapSelect> {
                   decoration: InputDecoration(
                     enabledBorder: AppTheme().normalOutlineInputBorder(),
                     focusedBorder: AppTheme().focusedOutlineInputBorder(),
-                    contentPadding:
-                        const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                    contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                      20,
+                      0,
+                      0,
+                      0,
+                    ),
                     filled: true,
                     fillColor: AppTheme().primaryLightColor(),
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Icon(
+                        AppIcons().dropdownIcon().icon,
+                        color: AppTheme().secondaryDarkColor(),
+                      ),
+                    ),
                   ),
-                  icon: Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: AppIcons().dropdownIcon(),
-                  ),
-                  iconEnabledColor: AppTheme().secondaryDarkColor(),
-                  items: widget.options.map((Map<String, dynamic> option) {
-                    return DropdownMenuItem<String>(
-                      value: option[widget.valueKey].toString(),
-                      child: Text(option[widget.labelKey].toString()),
-                    );
-                  }).toList(),
-                  onChanged: widget.disabled
-                      ? null
-                      : (String? newValue) {
-                          setState(() {
-                            _selectedValue = newValue;
-                          });
-                          widget.onSelected(newValue);
-                          state.didChange(newValue);
-                          state.validate();
-                        },
+                  icon: const SizedBox.shrink(),
+                  items:
+                      widget.options.map((Map<String, dynamic> option) {
+                        return DropdownMenuItem<String>(
+                          value: option[widget.valueKey].toString(),
+                          child: Text(option[widget.labelKey].toString()),
+                        );
+                      }).toList(),
+                  onChanged:
+                      widget.disabled
+                          ? null
+                          : (String? newValue) {
+                            setState(() {
+                              _selectedValue = newValue;
+                            });
+                            widget.onSelected(newValue);
+                            state.didChange(newValue);
+                            state.validate();
+                          },
                 ),
                 if (state.hasError)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 12.0),
                     child: Text(
                       state.errorText ?? '',
-                      style:
-                          TextStyle(color: Theme.of(context).colorScheme.error),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                   ),
               ],

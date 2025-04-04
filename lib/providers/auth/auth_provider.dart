@@ -16,7 +16,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> init() async {
     //dart function to initialize the token
     token =
-        await SharedPrefService()
+        await SharedPrefService
             .getToken(); //get the token form shared preferences(local storage)chceck from laravel token
 
     if (token.isNotEmpty) {
@@ -25,8 +25,8 @@ class AuthProvider extends ChangeNotifier {
     apiService = ApiService(token);
     notifyListeners(); // its package(provider) function to notify the listeners
 
-    userId = await SharedPrefService().getUserId();
-    name = await SharedPrefService().getName();
+    userId = await SharedPrefService.getUserId();
+    name = await SharedPrefService.getName();
   }
 
   Future<void> login(String email, String password) async {
@@ -34,18 +34,18 @@ class AuthProvider extends ChangeNotifier {
     token = apiService.token;
     userId = apiService.userId;
     name = apiService.name;
-    SharedPrefService().setToken(token);
-    SharedPrefService().setUserId(userId);
-    SharedPrefService().setName(name);
+    SharedPrefService.setToken(token);
+    SharedPrefService.setUserId(userId);
+    SharedPrefService.setName(name);
     isAuthenticated =
         true; // set the authentication status to true after successful login
     notifyListeners();
   }
 
   Future<void> logOut() async {
-    SharedPrefService().setToken(''); //
-    SharedPrefService().setUserId(0);
-    SharedPrefService().setName('');
+    SharedPrefService.setToken(''); //
+    SharedPrefService.setUserId(0);
+    SharedPrefService.setName('');
 
     isAuthenticated = false;
     notifyListeners();

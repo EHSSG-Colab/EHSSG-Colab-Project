@@ -63,8 +63,10 @@ class DatabaseHelper {
       'is_internally_displaced TEXT, '
       'remark TEXT'
       ')');
+
+    // CREATE VOLUNTEER TABLE 
     await _db.execute(
-        'CREATE TABLE IF NOT EXISTS $volTable(id INTEGER PRIMARY KEY, vol_name TEXT, vol_vil TEXT)');
+        'CREATE TABLE IF NOT EXISTS $volTable(id INTEGER PRIMARY KEY, vol_name TEXT, vol_tsp TEXT, vol_vil TEXT)');
     return _db;
   }
   

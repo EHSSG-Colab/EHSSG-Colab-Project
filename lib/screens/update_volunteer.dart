@@ -1,49 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_report_mobile/services/shared_preferences.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/sized_box.dart';
 import 'package:provider/provider.dart';
 import '../constants/dropdown_options.dart';
 import '../providers/volunteer_provider.dart';
+import '../themes/app_icons.dart';
 import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
+import '../widgets/unit_widgets/delete_confirmation_dialog.dart';
 import '../widgets/unit_widgets/elevated_button.dart';
 import '../widgets/unit_widgets/nav_wrapper.dart';
 import '../widgets/unit_widgets/simple_dropdown.dart';
 import '../widgets/unit_widgets/simple_map_dropdown.dart';
+import '../widgets/unit_widgets/tappable_icon.dart';
 import '../widgets/unit_widgets/text_form_field.dart';
 
 class UpdateVolunteer extends StatefulWidget {
   // navigate to after the job is done
   final int? navigateToIndex;
-  const UpdateVolunteer({super.key, this.navigateToIndex});
+  final int? id;
+  final String? volName;
+  final String? volTsp;
+  final String? volVillage;
+  final String operation;
+  const UpdateVolunteer({
+    super.key,
+    this.id,
+    this.volName,
+    this.volTsp,
+    this.volVillage,
+    required this.operation,
+    this.navigateToIndex,
+  });
 
   @override
   State<UpdateVolunteer> createState() => _UpdateProfileState();
 }
 
 class _UpdateProfileState extends State<UpdateVolunteer> {
+  // DEFAULT VALUE TO LOAD FOR EDITINT PURPOSE
+  // volunteer id
+  int? id;
+
+  // volunter name
+  String? volName;
+
+  // CONTROLLER FOR INSERTING PURPOSE
   // username
   final TextEditingController _VolunteerNameController =
       TextEditingController();
-  // user township
-  String? _selectedVolunteerTownship;
-  // user village
-  String? _selectedVolunteerVillage;
-
-  // filtered villages for cascading dropdown
-  List<String> villages = []; // initially empty
 
   // other village
   final TextEditingController _otherVillageController = TextEditingController();
+
+  // FORM VARIABLES
   // form key for validation
   final GlobalKey<FormState> _key = GlobalKey();
   // error message
   String? errorMessage;
 
-  //useremail
-  //  String? _selectedemail;
+  // user township
+  String? _selectedVolunteerTownship;
+
+  // user village
+  String? _selectedVolunteerVillage;
+
+  // filtered villages for cascading dropdown
+  List<String> villages = []; // initially empty
 
   @override
   void dispose() {
@@ -55,28 +79,52 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo().then((_) {
-      // Populate villages list after user info is loaded
-      if (_selectedVolunteerTownship != null) {
-        setState(() {
-          villages =
-              Constants.townshipVillage.firstWhere(
-                    (item) => item['township'] == _selectedVolunteerTownship,
-                  )['villages']
-                  as List<String>;
-        });
-      }
-    });
+
+    // pass the values to the screen if the widget is provided with information for editing purposes
+    id = widget.id;
+    volName = widget.volName;
+    _selectedVolunteerTownship = widget.volTsp;
+    _selectedVolunteerVillage = widget.volVillage;
+    _VolunteerNameController.text = volName ?? '';
+
+    // populate the village dropdown if township is selected by default during editing purposes
+    if (_selectedVolunteerTownship != null) {
+      villages =
+          Constants.townshipVillage.firstWhere(
+                (item) => item['township'] == _selectedVolunteerTownship,
+              )['villages']
+              as List<String>;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return ScaffoldForScrollView(
-      canPop: context.read<VolunteerProvider>().isVolunteerProfileComplete,
+      canPop: context.read<VolunteerProvider>().volunteers.isNotEmpty,
       appBar: MyAppBar(
-        hasBackArrow:
-            context.read<VolunteerProvider>().isVolunteerProfileComplete,
-        title: Text('Add Volunteer', style: AppTheme().displayLarge()),
+        hasBackArrow: false,
+        title: Text(
+          '${widget.operation} Volunteer',
+          style: AppTheme().displayLarge(),
+        ),
+        actions: [
+          if (widget.operation == 'Edit')
+            TappableIcon(
+              icon: AppIcons().deleteIcon(),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DeleteConfirmationDialog(
+                      title: 'Delete Volunteer?',
+                      content: 'Are you sure to delete this volunteer?',
+                      onDelete: _delete,
+                    );
+                  },
+                );
+              },
+            ),
+        ],
       ),
       children: children,
     );
@@ -152,6 +200,9 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
             },
             key: UniqueKey(),
           ),
+
+          sizedBoxh20(),
+          
           Row(
             children: [
               // submit button
@@ -172,15 +223,11 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
                         context,
                         MaterialPageRoute(
                           builder:
-                              (context) => const NavWrapper(initialIndex: 1),
+                              (context) => const NavWrapper(initialIndex: 2),
                         ),
                         (route) => false,
                       ),
                   outlined: true,
-                  isVisible:
-                      context
-                          .read<VolunteerProvider>()
-                          .isVolunteerProfileComplete,
                 ),
               ),
             ],
@@ -190,23 +237,6 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
     ),
   ];
 
-  // preload user info
-  Future<void> _loadUserInfo() async {
-    final userInfo = await SharedPrefService.getUserInfo();
-
-    setState(() {
-      _VolunteerNameController.text = userInfo['userName'] ?? '';
-      _selectedVolunteerTownship = userInfo['userTownship'];
-      _selectedVolunteerVillage = userInfo['userVillage'];
-    });
-    // final apiUserInfo = await SharedPrefService.getUserApiInfo();
-    // setState(() {
-    //   _userNameController.text = apiUserInfo?.apiUsername ?? '';
-    //   _selectedemail = apiUserInfo?.apiEmail ?? '';
-
-    // });
-  }
-
   // submit form
   Future<void> _submit() async {
     if (_key.currentState!.validate()) {
@@ -215,12 +245,22 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
         listen: false,
       );
       try {
-        await provider.updateVolunteerInfo(
-          volunteerName: _VolunteerNameController.text,
-          volunteerTownship: _selectedVolunteerTownship!,
-          volunteerVillage: _selectedVolunteerVillage ?? '',
-        );
-        EasyLoading.showSuccess('Volunteer updated successfully');
+        if (widget.operation == 'Edit') {
+          await provider.editVolunteerInfo(
+            id: id!,
+            volunteerName: _VolunteerNameController.text,
+            volunteerTownship: _selectedVolunteerTownship!,
+            volunteerVillage: _selectedVolunteerVillage ?? '',
+          );
+          EasyLoading.showSuccess('Volunteer updated successfully');
+        } else {
+          await provider.insertVolunteerInfo(
+            volunteerName: _VolunteerNameController.text,
+            volunteerTownship: _selectedVolunteerTownship!,
+            volunteerVillage: _selectedVolunteerVillage ?? '',
+          );
+          EasyLoading.showSuccess('Volunteer added successfully');
+        }
       } catch (e) {
         setState(() {
           errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -241,6 +281,20 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
       } else {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       }
+    }
+  }
+
+  Future<void> _delete() async {
+    final VolunteerProvider provider = Provider.of<VolunteerProvider>(
+      context,
+      listen: false,
+    );
+    try {
+      await provider.deleteVolunteer(id!);
+      EasyLoading.showSuccess('Volunteer deleted successfully');
+      Navigator.pop(context);
+    } catch (e) {
+      EasyLoading.showError('Failed to delete volunteer: ${e.toString()}');
     }
   }
 }

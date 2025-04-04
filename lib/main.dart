@@ -10,6 +10,8 @@ import 'package:malaria_report_mobile/widgets/unit_widgets/nav_wrapper.dart';
 
 import 'package:provider/provider.dart';
 
+import 'providers/volunteer_provider.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
             providers: [
               // providers are loaded here in the main.dart
               ChangeNotifierProvider(create: (context) => ProfileProvider()),
-              // ChangeNotifierProvider(create: (context) => VolunteerProvider()),
+              ChangeNotifierProvider(create: (context) => VolunteerProvider()),
               ChangeNotifierProvider(create: (context) => MalariaProvider()),
             ],
             child: Consumer<ProfileProvider>(

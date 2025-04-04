@@ -4,6 +4,10 @@ Widget sizedBoxh20() {
   return const SizedBox(height: 20);
 }
 
+Widget sizedBoxh50() {
+  return const SizedBox(height: 50);
+}
+
 Widget sizedBoxh10() {
   return const SizedBox(height: 10);
 }

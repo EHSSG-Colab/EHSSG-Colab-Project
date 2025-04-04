@@ -13,6 +13,21 @@ class AppTheme {
     return const TextStyle(fontFamily: 'Urbanist', fontSize: 20);
   }
 
+  TextStyle labelSmall() {
+    return const TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 10,
+    );
+  }
+
+  TextStyle labelSmallBold() {
+    return const TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 10,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
   TextStyle buttonLabel() {
     return const TextStyle(
       fontFamily: 'Urbanist',
@@ -77,6 +92,11 @@ class AppTheme {
 
   Color ehssgOrangeColor() {
     return const Color.fromARGB(255, 255, 178, 84);
+  }
+
+  Color listTileBackgroundColor() {
+    // light warm color
+    return const Color.fromARGB(255, 255, 225, 193);
   }
 
   OutlineInputBorder normalOutlineInputBorder() {

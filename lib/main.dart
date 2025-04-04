@@ -54,6 +54,11 @@ class MyApp extends StatelessWidget {
                   }
                   // redirect to update profile if profile information is not complete
                   if (!profileProvider.isProfileComplete) {
+                    EasyLoading.instance.userInteractions = true; // allow user interaction
+                    EasyLoading.instance.dismissOnTap = true; // will close on tap
+                    EasyLoading.instance.displayDuration = const Duration(milliseconds: 3000); // duration of the message
+                    EasyLoading.showInfo('Please update your profile.');
+                    
                     return UpdateProfile(navigateToIndex: 1);
                   }
 

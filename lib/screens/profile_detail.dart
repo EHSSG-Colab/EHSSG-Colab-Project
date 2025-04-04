@@ -107,8 +107,8 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:malaria_case_report_01/provider/profile_provider.dart';
+import 'package:provider/provider.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
 import '../widgets/unit_widgets/elevated_button.dart';
@@ -117,20 +117,6 @@ import 'update_profile.dart';
 
 class ProfileDetail extends StatelessWidget {
   const ProfileDetail({super.key});
-
-  // Fetch user information from the shared preferences
-  Future<Map<String, dynamic>> _getUserInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return {
-      'userId': prefs.getInt('userId').toString(),
-      'userName': prefs.getString('userName') ?? '',
-      'userTownship': prefs.getString('userTownship') ?? '',
-      'userVillage': prefs.getString('userVillage') ?? '',
-      'villageNotFound': prefs.getBool('villageNotFound') ?? false,
-      'userOtherVillage': prefs.getString('userOtherVillage') ?? '',
-    };
-  }
 
   // Reusable method to build the profile graphic
   Widget buildProfileGraphic() {
@@ -147,16 +133,18 @@ class ProfileDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: _getUserInfo(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-          final userInfo = snapshot.data!;
-          return ScaffoldForScrollView(
+    final profileProvider = Provider.of<ProfileProvider>(context);
+
+    // Ensure the profile provider is initialized
+    if (!profileProvider.isInitialized) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    // get logged in user information from the profile provider
+    final userInfo = profileProvider.userInfo;
+    return ScaffoldForScrollView(
             canPop: false,
             appBar: const MyAppBar(
               hasBackArrow: false,
@@ -186,20 +174,14 @@ class ProfileDetail extends StatelessWidget {
               MyButton(
                 buttonLabel: 'Edit Profile',
                 onPressed:
-                    () => Navigator.pushAndRemoveUntil(
+                    () => Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => UpdateProfile(navigateToIndex: 1),
                       ),
-                      (route) => false,
                     ),
               ),
             ],
           );
-        } else {
-          return const Center(child: Text('No data available'));
-        }
-      },
-    );
   }
 }

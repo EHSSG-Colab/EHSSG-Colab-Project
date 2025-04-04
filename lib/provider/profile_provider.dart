@@ -14,19 +14,48 @@ class ProfileProvider extends ChangeNotifier {
 
   Future<void> init() async {
     if (_isInitialized) return;
+
     // get user info from shared preference helper
-    userInfo = await SharedPrefService.getUserInfo();
-    _updateProfileCompleteStatus();
-    _isInitialized = true;
-    notifyListeners();
+    // Used a try catch approach here
+    try {
+      userInfo = await SharedPrefService.getUserInfo();
+      _updateProfileCompleteStatus();
+    } catch (e) {
+      print('Error initializing profile provider: $e');
+      // Error handling by setting default values to prevent messy info saved to shared preferences
+      userInfo = {
+        'userId': '',
+        'userName': '',
+        'userTownship': '',
+        'userVillage': '',
+        'villageNotFound': false,
+        'userOtherVillage': '',
+      };
+      isProfileComplete = false;
+    } finally {
+      _isInitialized = true;
+      notifyListeners();
+    }
   }
 
   void _updateProfileCompleteStatus() {
-    isProfileComplete =
-        userInfo['userName']?.isNotEmpty == true &&
-        userInfo['userTownship']?.isNotEmpty == true &&
-        (userInfo['userVillage']?.isNotEmpty == true ||
-            userInfo['userOtherVillage']?.isNotEmpty == true);
+    // check if userName is provided by the user
+    bool hasUserName = userInfo['userName']?.isNotEmpty == true;
+
+    // check if userTownship is provided by the user
+    bool hasTownship = userInfo['userTownship']?.isNotEmpty == true;
+
+    // check if userVillage is provided, either regular village or other village
+    bool hasVillage = false; // false initially
+    // if villageNotFound is checked, need to check other village
+    if (userInfo['villageNotFound'] == true) {
+      hasVillage = userInfo['userOtherVillage']?.isNotEmpty == true;
+    } else {
+      hasVillage = userInfo['userVillage']?.isNotEmpty == true;
+    }
+
+    // profile will be set as completed if all required fields are true
+    isProfileComplete = hasUserName && hasTownship && hasVillage;
   }
 
   Future<void> updateUserInfo({
@@ -36,16 +65,22 @@ class ProfileProvider extends ChangeNotifier {
     required bool villageNotFound,
     required String userOtherVillage,
   }) async {
-    await SharedPrefService.saveUserInfo(
-      userName: userName,
-      userTownship: userTownship,
-      userVillage: userVillage,
-      villageNotFound: villageNotFound,
-      userOtherVillage: userOtherVillage,
-    );
-    userInfo = await SharedPrefService.getUserInfo();
-    _updateProfileCompleteStatus();
-    notifyListeners();
+    // Added a try catch here
+    try {
+      await SharedPrefService.saveUserInfo(
+        userName: userName,
+        userTownship: userTownship,
+        userVillage: userVillage,
+        villageNotFound: villageNotFound,
+        userOtherVillage: userOtherVillage,
+      );
+      userInfo = await SharedPrefService.getUserInfo();
+      _updateProfileCompleteStatus();
+      notifyListeners();
+    } catch (e) {
+      print('Error updating user info: $e');
+      rethrow;
+    }
   }
 
   bool get isInitialized => _isInitialized;

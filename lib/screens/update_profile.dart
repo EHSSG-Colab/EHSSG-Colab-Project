@@ -212,15 +212,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 flex: 1,
                 child: MyButton(
                   buttonLabel: 'Cancel',
-                  onPressed:
-                      () => Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const NavWrapper(initialIndex: 1),
-                        ),
-                        (route) => false,
-                      ),
+                  onPressed: () => Navigator.pop(context), // simply go back
                   outlined: true,
                   isVisible: context.read<ProfileProvider>().isProfileComplete,
                 ),
@@ -260,25 +252,26 @@ class _UpdateProfileState extends State<UpdateProfile> {
           userOtherVillage: _otherVillageController.text,
         );
         EasyLoading.showSuccess('Profile updated successfully');
+
+        // conditional navigation after the job is done
+        if (widget.navigateToIndex != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      NavWrapper(initialIndex: widget.navigateToIndex!),
+            ),
+          );
+        } else {
+          Navigator.pop(context); // just go back if no index is provided
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        }
       } catch (e) {
         setState(() {
           errorMessage = e.toString().replaceAll('Exception: ', '');
           EasyLoading.showError(errorMessage ?? '');
         });
-      }
-
-      // conditional navigation after the job is done
-      if (widget.navigateToIndex != null) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) => NavWrapper(initialIndex: widget.navigateToIndex!),
-          ),
-          (route) => false,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       }
     }
   }

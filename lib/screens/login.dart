@@ -5,6 +5,7 @@ import 'package:malaria_case_report_01/services/network_check.dart';
 import 'package:malaria_case_report_01/themes/app_theme.dart';
 import 'package:malaria_case_report_01/widgets/layouts/scaffold_for_scroll_view.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/elevated_button.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/sized_box.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/text_form_field.dart';
 
 import 'package:provider/provider.dart';

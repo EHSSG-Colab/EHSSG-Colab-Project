@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-class ScaffoldForScrollView extends StatelessWidget {
-  const ScaffoldForScrollView({
+class ScaffoldForListView extends StatelessWidget {
+  const ScaffoldForListView({
     super.key,
     this.appBar,
-    required this.children,
+    required this.child,
     required this.canPop,
     this.bottomNavigationBar,
+    this.floatingActionButton,
   });
   final bool canPop;
-  final List<Widget> children;
+  final Widget child;
   final PreferredSizeWidget? appBar;
   final Widget? bottomNavigationBar;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +34,9 @@ class ScaffoldForScrollView extends StatelessWidget {
                     color: Theme.of(context).colorScheme.surface,
                   ),
                   alignment: const AlignmentDirectional(0, -1),
-                  child: SizedBox(
+                  child: Container(
                     width: double.infinity,
+                    alignment: const AlignmentDirectional(-1, 0),
                     child: Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(
                         32,
@@ -41,13 +44,7 @@ class ScaffoldForScrollView extends StatelessWidget {
                         32,
                         0,
                       ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: children,
-                        ),
-                      ),
+                      child: child,
                     ),
                   ),
                 ),
@@ -57,6 +54,7 @@ class ScaffoldForScrollView extends StatelessWidget {
         ),
       ),
       appBar: appBar,
+      floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
     );
   }

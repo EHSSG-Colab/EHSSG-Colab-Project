@@ -41,7 +41,7 @@ class AppIcons {
     return const Icon(Icons.help_outline);
   }
 
-  Icon addOutlineIcon() {
+  Icon addOutlineicon() {
     return const Icon(Icons.add_circle_outline);
   }
 

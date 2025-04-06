@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_case_report_01/provider/profile_provider.dart'
-    show ProfileProvider;
-import 'package:malaria_case_report_01/services/shared_preferences.dart';
+import 'package:malaria_case_report_01/provider/profile_provider.dart';
 
 import 'package:provider/provider.dart';
 
 import '../constants/dropdown_options.dart';
 
+import '../services/shared_preferences.dart';
 import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
@@ -16,6 +15,7 @@ import '../widgets/unit_widgets/elevated_button.dart';
 import '../widgets/unit_widgets/nav_wrapper.dart';
 import '../widgets/unit_widgets/simple_dropdown.dart';
 import '../widgets/unit_widgets/simple_map_dropdown.dart';
+import '../widgets/unit_widgets/sized_box.dart';
 import '../widgets/unit_widgets/text_form_field.dart';
 
 class UpdateProfile extends StatefulWidget {
@@ -212,15 +212,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 flex: 1,
                 child: MyButton(
                   buttonLabel: 'Cancel',
-                  onPressed:
-                      () => Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const NavWrapper(initialIndex: 1),
-                        ),
-                        (route) => false,
-                      ),
+                  onPressed: () => Navigator.pop(context), // simply go back
                   outlined: true,
                   isVisible: context.read<ProfileProvider>().isProfileComplete,
                 ),
@@ -260,25 +252,26 @@ class _UpdateProfileState extends State<UpdateProfile> {
           userOtherVillage: _otherVillageController.text,
         );
         EasyLoading.showSuccess('Profile updated successfully');
+
+        // conditional navigation after the job is done
+        if (widget.navigateToIndex != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      NavWrapper(initialIndex: widget.navigateToIndex!),
+            ),
+          );
+        } else {
+          Navigator.pop(context); // just go back if no index is provided
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        }
       } catch (e) {
         setState(() {
           errorMessage = e.toString().replaceAll('Exception: ', '');
           EasyLoading.showError(errorMessage ?? '');
         });
-      }
-
-      // conditional navigation after the job is done
-      if (widget.navigateToIndex != null) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) => NavWrapper(initialIndex: widget.navigateToIndex!),
-          ),
-          (route) => false,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       }
     }
   }

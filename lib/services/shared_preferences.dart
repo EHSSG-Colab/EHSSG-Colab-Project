@@ -1,54 +1,49 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 class SharedPrefService {
   // Save API token
-  Future<void> setToken(String token) async {
+  // Switched to static for consistency
+  static Future<void> setToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    print('Token saved: $token');
   }
 
   // Retrieve API token
-  Future<String> getToken() async {
+  // Made this static for consistency
+  static Future<String> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    print('Retrieved token: $token');
     return token;
   }
 
   // Save user ID
-  Future<void> setUserId(int userId) async {
+  static Future<void> setUserId(int userId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('userId', userId);
-    print('User ID saved: $userId');
   }
 
   // Retrieve user ID
-  Future<int> getUserId() async {
+  static Future<int> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userId') ?? 0;
-    print('Retrieved user ID: $userId');
     return userId;
   }
 
   // Save user name
-  Future<void> setName(String name) async {
+  static Future<void> setName(String name) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', name);
-    print('User name saved: $name');
   }
 
   // Retrieve user name
-  Future<String> getName() async {
+  static Future<String> getName() async {
     final prefs = await SharedPreferences.getInstance();
     final name = prefs.getString('userName') ?? '';
-    print('Retrieved user name: $name');
     return name;
   }
 
   // Save all login data (token, userId, userName)
-  Future<void> saveLoginData({
+  static Future<void> saveLoginData({
     required String token,
     required int userId,
     required String userName,
@@ -57,28 +52,23 @@ class SharedPrefService {
     await prefs.setString('token', token);
     await prefs.setInt('userId', userId);
     await prefs.setString('userName', userName);
-    print(
-      'Login data saved: {token: $token, userId: $userId, userName: $userName}',
-    );
   }
 
   // Save email
-  Future<void> setEmail(String email) async {
+  static Future<void> setEmail(String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
-    print('Email saved: $email');
   }
 
   // Retrieve email
-  Future<String> getEmail() async {
+  static Future<String> getEmail() async {
     final prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email') ?? '';
-    print('Retrieved email: $email');
     return email;
   }
 
   // Retrieve all login data
-  Future<Map<String, dynamic>> getLoginData() async {
+  static Future<Map<String, dynamic>> getLoginData() async {
     final prefs = await SharedPreferences.getInstance();
     final loginData = {
       'token': prefs.getString('token') ?? '',
@@ -86,11 +76,11 @@ class SharedPrefService {
       'userName': prefs.getString('userName') ?? '',
       'email': prefs.getString('email') ?? '',
     };
-    print('Retrieved login data: $loginData');
     return loginData;
   }
 
   // Save profile details
+  // THIS METHOD HANDLES PROFILE DATA, NOT LOGIN DETAILS
   static Future<void> saveUserInfo({
     required String userName,
     required String userTownship,
@@ -104,31 +94,24 @@ class SharedPrefService {
     await prefs.setString('userVillage', userVillage);
     await prefs.setBool('villageNotFound', villageNotFound);
     await prefs.setString('userOtherVillage', userOtherVillage);
-
-    // Generate and save userId if it doesn't exist
-    if (prefs.getString('userId') == null) {
-      final userId = const Uuid().v4();
-      await prefs.setString('userId', userId);
-      print('Generated and saved user ID: $userId');
-    }
-
-    print(
-      'Profile details saved: {userName: $userName, userTownship: $userTownship, userVillage: $userVillage, villageNotFound: $villageNotFound, userOtherVillage: $userOtherVillage}',
-    );
   }
 
   // Retrieve profile details
   static Future<Map<String, dynamic>> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
+
+    // get userId as int and convert to string
+    final userId = prefs.getInt('userId');
+    final userIdString = userId != null ? userId.toString() : '';
+
     final userInfo = {
-      'userId': prefs.getString('userId') ?? '',
+      'userId': userIdString,
       'userName': prefs.getString('userName') ?? '',
       'userTownship': prefs.getString('userTownship') ?? '',
       'userVillage': prefs.getString('userVillage') ?? '',
       'villageNotFound': prefs.getBool('villageNotFound') ?? false,
       'userOtherVillage': prefs.getString('userOtherVillage') ?? '',
     };
-    print('Retrieved profile details: $userInfo');
     return userInfo;
   }
 
@@ -136,6 +119,5 @@ class SharedPrefService {
   static Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    print('All data cleared.');
   }
 }

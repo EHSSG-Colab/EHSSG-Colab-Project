@@ -43,6 +43,14 @@ class _SimpleMapSelectState extends State<SimpleMapSelect> {
     _selectedValue = widget.initialValue;
   }
 
+  // Helper method to check if the selected value exists in options
+  bool _valueExistsInOptions(String? value) {
+    if (value == null) return false;
+    return widget.options.any(
+      (option) => option[widget.valueKey].toString() == value,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -73,7 +81,11 @@ class _SimpleMapSelectState extends State<SimpleMapSelect> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButtonFormField<String>(
-                  value: _selectedValue,
+                  // Only set value if it exists in the options list
+                  value:
+                      _valueExistsInOptions(_selectedValue)
+                          ? _selectedValue
+                          : null,
                   hint: Text(
                     widget.placeholder ?? 'Select an option',
                     style: TextStyle(
@@ -108,12 +120,15 @@ class _SimpleMapSelectState extends State<SimpleMapSelect> {
                     ),
                     filled: true,
                     fillColor: AppTheme().primaryLightColor(),
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Icon(
+                        AppIcons().dropdownIcon().icon,
+                        color: AppTheme().secondaryDarkColor(),
+                      ),
+                    ),
                   ),
-                  icon: Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: AppIcons().dropdownIcon(),
-                  ),
-                  iconEnabledColor: AppTheme().secondaryDarkColor(),
+                  icon: const SizedBox.shrink(),
                   items:
                       widget.options.map((Map<String, dynamic> option) {
                         return DropdownMenuItem<String>(

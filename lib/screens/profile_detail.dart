@@ -28,9 +28,7 @@ class ProfileDetail extends StatelessWidget {
     final profileProvider = Provider.of<ProfileProvider>(context);
 
     if (!profileProvider.isInitialized) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final userInfo = profileProvider.userInfo;
@@ -45,29 +43,28 @@ class ProfileDetail extends StatelessWidget {
         buildProfileGraphic(),
         sizedBoxh20(),
         MyListTile(label: 'User ID:', value: userInfo['userId'] ?? 'N/A'),
-        MyListTile(
-          label: 'User Name:',
-          value: userInfo['userName'] ?? 'N/A',
-        ),
+        MyListTile(label: 'User Name:', value: userInfo['userName'] ?? 'N/A'),
         MyListTile(
           label: 'Township:',
           value: userInfo['userTownship'] ?? 'N/A',
         ),
         MyListTile(
           label: 'Village:',
-          value: userInfo['villageNotFound'] == true
-              ? userInfo['userOtherVillage'] ?? 'N/A'
-              : userInfo['userVillage'] ?? 'N/A',
+          value:
+              userInfo['villageNotFound'] == true
+                  ? userInfo['userOtherVillage'] ?? 'N/A'
+                  : userInfo['userVillage'] ?? 'N/A',
         ),
         sizedBoxh20(),
         MyButton(
           buttonLabel: 'Edit Profile',
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const UpdateProfile(navigateToIndex: 1),
-            ),
-          ),
+          onPressed:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UpdateProfile(navigateToIndex: 1),
+                ),
+              ),
         ),
       ],
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:malaria_case_report_01/database/database_helper.dart';
-import 'package:malaria_case_report_01/screens/update_volunteer.dart';
+import 'package:malaria_case_report_01/screens/add_report.dart'; // Import AddReport page
+import 'package:malaria_case_report_01/widgets/unit_widgets/app_bar.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/floating_button.dart';
+import 'package:malaria_case_report_01/themes/app_icons.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -58,40 +61,38 @@ class _HomeState extends State<Home> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -10,
-            bottom: -10,
-            child: Icon(icon, size: 80, color: iconColor.withOpacity(0.1)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: iconColor, size: 28),
-                const SizedBox(height: 8),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: iconColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: iconColor.withOpacity(0.8),
-                  ),
-                ),
-              ],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: iconColor, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -114,7 +115,12 @@ class _HomeState extends State<Home> {
           _volunteers.isEmpty
               ? const Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Center(child: Text('No volunteers available')),
+                child: Center(
+                  child: Text(
+                    'No volunteers available',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ),
               )
               : ListView.separated(
                 shrinkWrap: true,
@@ -142,21 +148,20 @@ class _HomeState extends State<Home> {
                     ),
                     title: Text(
                       volunteer['vol_name'] ?? 'Unknown',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
                     subtitle: Text(
                       'Township: ${volunteer['vol_tsp'] ?? 'N/A'}\n'
                       'Village: ${volunteer['vol_vil'] ?? 'N/A'}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey.shade700,
-                      ),
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                     isThreeLine: true,
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey.shade400,
+                      color: Colors.grey,
                       size: 16,
                     ),
                   );
@@ -168,13 +173,23 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.blue.shade50,
+      appBar: const MyAppBar(
+        hasBackArrow: false,
+        title: Text('Malaria App Dashboard'),
       ),
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade100, // Neutral background color
+      floatingActionButton: MyFloatingButton(
+        label: 'Add Reporter',
+        icon: AppIcons().addOutlineicon(),
+        onPressed:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => const AddReport(), // Navigate to AddReport
+              ),
+            ),
+      ),
       body: SafeArea(
         child:
             _isLoading
@@ -197,52 +212,30 @@ class _HomeState extends State<Home> {
                               'Total Volunteers',
                               totalVolunteers.toString(),
                               Icons.people_outline,
-                              const Color(0xFFE3F2FD),
-                              const Color(0xFF2196F3),
+                              Colors.blue.shade50,
+                              Colors.blue.shade700,
                             ),
                             _buildStatCard(
                               'Townships',
                               townships.toString(),
                               Icons.location_city_outlined,
-                              const Color(0xFFE8F5E9),
-                              const Color(0xFF4CAF50),
+                              Colors.blue.shade50,
+                              Colors.blue.shade700,
                             ),
                             _buildStatCard(
                               'Villages',
                               villages.toString(),
                               Icons.home_work_outlined,
-                              const Color(0xFFFFF3E0),
-                              const Color(0xFFFF9800),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const UpdateVolunteer(
-                                          operation: 'Add',
-                                          navigateToIndex: 2,
-                                        ),
-                                  ),
-                                );
-                              },
-                              child: _buildStatCard(
-                                'Add Volunteers',
-                                'Add',
-                                Icons.person_add_outlined,
-                                const Color(0xFFF3E5F5),
-                                const Color(0xFF9C27B0),
-                              ),
+                              Colors.blue.shade50,
+                              Colors.blue.shade700,
                             ),
                           ],
                         ),
                         const SizedBox(height: 24),
-                        Text(
+                        const Text(
                           'Recent Volunteers List',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.headlineSmall?.copyWith(
+                          style: TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),

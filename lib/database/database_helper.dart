@@ -1,4 +1,3 @@
-import 'package:malaria_report_mobile/models/malaria.dart';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
@@ -191,6 +190,16 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllVol() async {
     _db = await _createDatabase();
     return await _db.rawQuery('SELECT * FROM $volTable ORDER BY id ASC');
+  }
+
+  // GET ONE VOLUNTEER
+  Future<Map<String, dynamic>> getVolunteerByName(String name) async {
+    _db = await _createDatabase();
+    List<Map<String, dynamic>> result = await _db.rawQuery(
+      'SELECT * FROM $volTable WHERE vol_name=?',
+      [name],
+    );
+    return result.first;
   }
 
   // UPDATE VOLUNTEER TABLE

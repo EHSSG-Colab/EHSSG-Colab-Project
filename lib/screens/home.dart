@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:malaria_report_mobile/database/database_helper.dart';
+import 'package:malaria_report_mobile/models/malaria.dart';
+import 'package:malaria_report_mobile/providers/malaria_provider.dart';
+import 'package:malaria_report_mobile/screens/update_malaria.dart';
+import 'package:malaria_report_mobile/screens/view_malaria.dart';
 import 'package:malaria_report_mobile/services/api.dart';
 import 'package:malaria_report_mobile/services/network_check.dart';
 import 'package:malaria_report_mobile/services/shared_preferences.dart';
@@ -10,13 +15,14 @@ import 'package:malaria_report_mobile/themes/app_icons.dart';
 import 'package:malaria_report_mobile/themes/app_theme.dart';
 import 'package:malaria_report_mobile/widgets/layouts/scaffold_for_lilst_vew.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/app_bar.dart';
+import 'package:malaria_report_mobile/widgets/unit_widgets/badge_text.dart';
+import 'package:malaria_report_mobile/widgets/unit_widgets/empty_list_message.dart';
+import 'package:malaria_report_mobile/widgets/unit_widgets/floating_button.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/icon_text_button.dart';
+import 'package:malaria_report_mobile/widgets/unit_widgets/list_tile_records_with_badge.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/sized_box.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/vertical_more_icon_button.dart';
 import 'package:provider/provider.dart';
-
-import '../models/malaria.dart';
-import '../providers/malaria_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -111,17 +117,104 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
                 opacity: _hasUnsyncedRecords ? 1.0 : 0.5,
               ),
               sizedBoxh10(),
+              sizedBoxh10(),
               _buildAppBarMoreButton(),
             ],
           ),
           canPop: false,
-          child: const Placeholder(),
+          floatingActionButton: MyFloatingButton(
+            label: 'Add Record',
+            icon: AppIcons().addOutlineicon(),
+            onPressed: () async {
+              // Navigate to add new malaria case screen
+              await Navigator.pushNamed(
+                context,
+                '/update-malaria',
+                arguments: {'navigateToIndex': 0},
+              );
+              _fetchData();
+            },
+          ),
+          child:
+              malariaCases.isEmpty
+                  ? const EmptyListMessage(
+                    message: 'No malaria treatment records have been entered.',
+                    icon: Icons.biotech,
+                    actionMessage:
+                        'Press Add Record to start entering malaria treatment records.',
+                  )
+                  : ListView.builder(
+                    itemCount: malariaCases.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          if (index == 0) sizedBoxh20(),
+                          MyListTileRecordsWithBadge(
+                            caption: malariaCases[index].patientName,
+                            label:
+                                '${malariaCases[index].patientAge} ${_capitalizeFirstLetter(malariaCases[index].ageUnit)}(s)',
+                            leadingIcon:
+                                malariaCases[index].syncStatus == 'PENDING'
+                                    ? AppIcons().pendingSyncIcon()
+                                    : AppIcons().completeSyncIcon(),
+                            badges: [
+                              MyBadgeText(
+                                text: malariaCases[index].patientSex,
+                                backgroundColor: AppTheme().ehssgOrangeColor(),
+                                textColor: AppTheme().grayTextColor(),
+                              ),
+                              sizedBoxh5(),
+                              malariaCases[index].rdtResult == 'Positive'
+                                  ? MyBadgeText(
+                                    text: _getMpInitials(
+                                      malariaCases[index].malariaParasite,
+                                    ),
+                                    backgroundColor: AppTheme().rosyColor(),
+                                    textColor: Colors.white,
+                                  )
+                                  : MyBadgeText(
+                                    text: 'Neg',
+                                    backgroundColor: AppTheme().grayTextColor(),
+                                    textColor: Colors.white,
+                                  ),
+                              sizedBoxh5(),
+                              MyBadgeText(
+                                text: _formatDate(
+                                  malariaCases[index].dateOfRdt,
+                                ),
+                                backgroundColor: AppTheme().accentColor(),
+                                textColor: Colors.black,
+                              ),
+                            ],
+                            trailingButton: Container(
+                              margin: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppTheme().highlightColor().withOpacity(
+                                  0.1,
+                                ),
+                              ),
+                              child: SizedBox(
+                                height: double.infinity,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: _buildListTileMoreButton(
+                                    malariaCases[index].id!,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (index == malariaCases.length - 1) sizedBoxh50(),
+                        ],
+                      );
+                    },
+                  ),
         );
       },
     );
   }
 
-  // Appbar title
   Widget _appBarTitle() {
     return const Text('Home');
   }
@@ -257,56 +350,106 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
               'Delete only synced records',
               style: TextStyle(color: Colors.red),
             ),
-          ),
-          onTap: () async {
-            Navigator.pop(context);
-            bool confirmDeleteSynced = await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Confirm deleting synced records'),
-                  content: const Text(
-                    'Are you sure you want to delete synced records?',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+            onTap: () async {
+              Navigator.pop(context);
+              bool confirmDeleteSynced = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm deleting synced records'),
+                    content: const Text(
+                      'Are you sure you want to delete synced records?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
 
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          AppTheme().rosyColor(),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            AppTheme().rosyColor(),
+                          ),
+                        ),
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-            if (confirmDeleteSynced == true) {
-              await _deleteSyncedRecords();
-            }
-          },
+                    ],
+                  );
+                },
+              );
+              if (confirmDeleteSynced == true) {
+                await _deleteSyncedRecords();
+              }
+            },
+          ),
         ),
       ],
     );
   }
+
+  // ListTile More Button
+  Widget _buildListTileMoreButton(int id) => VerticalMoreIconButton(
+    icon: AppIcons().moreIcon(),
+    menuItems: [
+      PopupMenuItem(
+        child: ListTile(
+          leading: AppIcons().viewIcon(),
+          iconColor: AppTheme().highlightColor(),
+          title: Text(
+            'View Details',
+            style: TextStyle(color: AppTheme().highlightColor()),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewMalaria(navigateToIndex: 0, id: id),
+              ),
+            ).then((_) => _fetchData());
+          },
+        ),
+      ),
+      PopupMenuItem(
+        child: ListTile(
+          leading: AppIcons().editIcon(),
+          iconColor: AppTheme().highlightColor(),
+          title: Text(
+            'Edit Record',
+            style: TextStyle(color: AppTheme().highlightColor()),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => UpdateMalaria(
+                      navigateToIndex: 0,
+                      operation: 'Edit',
+                      id: id,
+                    ),
+              ),
+            ).then((_) => _fetchData());
+          },
+        ),
+      ),
+    ],
+  );
 
   // Delete synced records
   Future<void> _deleteSyncedRecords() async {
@@ -354,5 +497,35 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
         _hasSyncedRecords = hasSynced;
       });
     }
+  }
+
+  // Get malaria parasite initials
+  String _getMpInitials(String mp) {
+    switch (mp.toLowerCase()) {
+      case 'plasmodium falciparum':
+        return 'Pf';
+      case 'plasmodium vivax':
+        return 'Pv';
+      case 'mixed':
+        return 'Mixed';
+      default:
+        return 'N/A';
+    }
+  }
+
+  // Format date from ISO format to d-M-y format
+  String _formatDate(String isoDate) {
+    try {
+      DateTime dateTime = DateTime.parse(isoDate);
+      return DateFormat('d-M-y').format(dateTime);
+    } catch (e) {
+      return isoDate; // Return the original if parsing fails
+    }
+  }
+
+  // Capitalize the first letter of a string
+  String _capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 }

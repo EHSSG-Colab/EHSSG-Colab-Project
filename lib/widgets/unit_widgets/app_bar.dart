@@ -9,14 +9,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.hasBackArrow,
     this.leadingIcon,
     this.actions,
-    this.leadigIconOnPressed,
+    this.leadingIconOnPressed,
   });
 
   final Widget? title;
   final bool hasBackArrow;
   final IconData? leadingIcon;
   final List<Widget>? actions;
-  final VoidCallback? leadigIconOnPressed;
+  final VoidCallback? leadingIconOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               )
               : leadingIcon != null
               ? IconButton(
-                onPressed: leadigIconOnPressed,
+                onPressed: leadingIconOnPressed,
                 icon: Icon(leadingIcon),
               )
               : null,

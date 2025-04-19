@@ -1,231 +1,91 @@
-class MalariaProvider extends ChangeNotifier {
-  List<Malaria> cases = [];
+class Malaria {
+  int? id;
+  String dataCollectorId;
+  String dataCollectorName;
+  String dataCollectorTownship;
+  String dataCollectorVillage;
+  String volunteerId;
+  String volunteerName;
+  String volunteerTownship;
+  String volunteerVillage;
+  String tMonth;
+  String tYear;
+  String dateOfRdt;
+  String patientName;
+  String ageUnit;
+  String patientAge;
+  String patientAddress;
+  String patientSex;
+  String isPregnant;
+  String isLactatingMother;
+  String rdtResult;
+  String malariaParasite;
+  String symptoms;
+  String act24;
+  String act24Count;
+  String act18;
+  String act18Count;
+  String act12;
+  String act12Count;
+  String act6;
+  String act6Count;
+  String chloroquine;
+  String chloroquineCount;
+  String primaquine;
+  String primaquineCount;
+  String isReferred;
+  String isDead;
+  String receivedTreatment;
+  String hasTravelled;
+  String occupation;
+  String isPersonWithDisabilities;
+  String isInternallyDisplaced;
+  String remark;
+  String syncStatus;
 
-  MalariaProvider() {
-    init();
-  }
-
-  Future<void> init() async {
-    final List<Map<String, dynamic>> localMalariaCases =
-        await DatabaseHelper().getAllMalaria();
-
-    cases = localMalariaCases.map((data) => Malaria.fromMap(data)).toList();
-    notifyListeners();
-  }
-
-  Future<void> fetchCases() async {
-    final List<Map<String, dynamic>> localMalariaCases =
-        await DatabaseHelper().getAllMalaria();
-
-    cases = localMalariaCases.map((data) => Malaria.fromMap(data)).toList();
-    notifyListeners();
-  }
-
-  Future<void> addMalariaCase({
-    required String rxMonth,
-    required String rxYear,
-    required String testDate,
-    required String name,
-    required String ageUnit,
-    required String age,
-    required String address,
-    required String sex,
-    required String pregnancy,
-    required String underSixMonthInfantLactatingMother,
-    required String rdtBool,
-    required String rdtPosResult,
-    required String symptom,
-    required String act24,
-    required String act24Amount,
-    required String act18,
-    required String act18Amount,
-    required String act12,
-    required String act12Amount,
-    required String act6,
-    required String act6Amount,
-    required String chloroquine,
-    required String chloroquineAmount,
-    required String primaquine,
-    required String primaquineAmount,
-    required String refer,
-    required String death,
-    required String receiveRx,
-    required String travel,
-    required String job,
-    required String otherJob,
-    required String disabled,
-    required String idp,
-    required String remark,
-    required String volName,
-    required String volTsp,
-    required String volVil,
-    required String tsp,
-    required String vil,
-    required String usrName,
-    required String usrId,
-    required String syncedStatus,
-  }) async {
-    Malaria newCase = Malaria(
-      rxMonth: rxMonth,
-      rxYear: rxYear,
-      testDate: testDate,
-      name: name,
-      ageUnit: ageUnit,
-      age: age,
-      address: address,
-      sex: sex,
-      pregnancy: pregnancy,
-      underSixMonthInfantLactatingMother: underSixMonthInfantLactatingMother,
-      rdtBool: rdtBool,
-      rdtPosResult: rdtPosResult,
-      symptom: symptom,
-      act24: act24,
-      act24Amount: act24Amount,
-      act18: act18,
-      act18Amount: act18Amount,
-      act12: act12,
-      act12Amount: act12Amount,
-      act6: act6,
-      act6Amount: act6Amount,
-      chloroquine: chloroquine,
-      chloroquineAmount: chloroquineAmount,
-      primaquine: primaquine,
-      primaquineAmount: primaquineAmount,
-      refer: refer,
-      death: death,
-      receiveRx: receiveRx,
-      travel: travel,
-      job: job,
-      otherJob: otherJob,
-      disabled: disabled,
-      idp: idp,
-      remark: remark,
-      volName: volName,
-      volTsp: volTsp,
-      volVil: volVil,
-      tsp: tsp,
-      vil: vil,
-      usrName: usrName,
-      usrId: usrId,
-      syncedStatus: syncedStatus,
-    );
-    int id = await DatabaseHelper().insertMalaria(newCase.toMap());
-    newCase.id = id;
-    cases.add(newCase);
-    notifyListeners();
-  }
-
-  Future<Malaria?> getMalariaById(int id) async {
-    final DatabaseHelper dbHelper = DatabaseHelper();
-    final Map<String, dynamic> malariaMap = await dbHelper.getMalariaById(id);
-
-    if (malariaMap.isNotEmpty) {
-      return Malaria.fromMap(malariaMap);
-    }
-    return null;
-  }
-
-  Future<void> updateMalariaCase({
-    required int id,
-    required String rxMonth,
-    required String rxYear,
-    required String testDate,
-    required String name,
-    required String ageUnit,
-    required String age,
-    required String address,
-    required String sex,
-    required String pregnancy,
-    required String underSixMonthInfantLactatingMother,
-    required String rdtBool,
-    required String rdtPosResult,
-    required String symptom,
-    required String act24,
-    required String act24Amount,
-    required String act18,
-    required String act18Amount,
-    required String act12,
-    required String act12Amount,
-    required String act6,
-    required String act6Amount,
-    required String chloroquine,
-    required String chloroquineAmount,
-    required String primaquine,
-    required String primaquineAmount,
-    required String refer,
-    required String death,
-    required String receiveRx,
-    required String travel,
-    required String job,
-    required String otherJob,
-    required String disabled,
-    required String idp,
-    required String remark,
-    required String volName,
-    required String volTsp,
-    required String volVil,
-    required String tsp,
-    required String vil,
-    required String usrName,
-    required String usrId,
-    required String syncedStatus,
-  }) async {
-    Malaria updatedCase = Malaria(
-      id: id,
-      rxMonth: rxMonth,
-      rxYear: rxYear,
-      testDate: testDate,
-      name: name,
-      ageUnit: ageUnit,
-      age: age,
-      address: address,
-      sex: sex,
-      pregnancy: pregnancy,
-      underSixMonthInfantLactatingMother: underSixMonthInfantLactatingMother,
-      rdtBool: rdtBool,
-      rdtPosResult: rdtPosResult,
-      symptom: symptom,
-      act24: act24,
-      act24Amount: act24Amount,
-      act18: act18,
-      act18Amount: act18Amount,
-      act12: act12,
-      act12Amount: act12Amount,
-      act6: act6,
-      act6Amount: act6Amount,
-      chloroquine: chloroquine,
-      chloroquineAmount: chloroquineAmount,
-      primaquine: primaquine,
-      primaquineAmount: primaquineAmount,
-      refer: refer,
-      death: death,
-      receiveRx: receiveRx,
-      travel: travel,
-      job: job,
-      otherJob: otherJob,
-      disabled: disabled,
-      idp: idp,
-      remark: remark,
-      volName: volName,
-      volTsp: volTsp,
-      volVil: volVil,
-      tsp: tsp,
-      vil: vil,
-      usrName: usrName,
-      usrId: usrId,
-      syncedStatus: syncedStatus,
-    );
-    await DatabaseHelper().updateMalaria(updatedCase.toMap(), id);
-    int index = cases.indexWhere((updatedCase) => updatedCase.id == id);
-    if (index != -1) {
-      cases[index] = updatedCase;
-      notifyListeners();
-    }
-  }
-
-  Future<void> deleteMalariaCase(int id) async {
-    await DatabaseHelper().deleteMalaria(id);
-    cases.removeWhere((deletedCase) => deletedCase.id == id);
-    notifyListeners();
-  }
+  Malaria({
+    this.id,
+    required this.dataCollectorId,
+    required this.dataCollectorName,
+    required this.dataCollectorTownship,
+    required this.dataCollectorVillage,
+    required this.volunteerId,
+    required this.volunteerName,
+    required this.volunteerTownship,
+    required this.volunteerVillage,
+    required this.tMonth,
+    required this.tYear,
+    required this.dateOfRdt,
+    required this.patientName,
+    required this.ageUnit,
+    required this.patientAge,
+    required this.patientAddress,
+    required this.patientSex,
+    required this.isPregnant,
+    required this.isLactatingMother,
+    required this.rdtResult,
+    required this.malariaParasite,
+    required this.symptoms,
+    required this.act24,
+    required this.act24Count,
+    required this.act18,
+    required this.act18Count,
+    required this.act12,
+    required this.act12Count,
+    required this.act6,
+    required this.act6Count,
+    required this.chloroquine,
+    required this.chloroquineCount,
+    required this.primaquine,
+    required this.primaquineCount,
+    required this.isReferred,
+    required this.isDead,
+    required this.receivedTreatment,
+    required this.hasTravelled,
+    required this.occupation,
+    required this.isPersonWithDisabilities,
+    required this.isInternallyDisplaced,
+    required this.remark,
+    required this.syncStatus,
+  });
 }

@@ -1,3 +1,4 @@
+import 'package:malaria_report_mobile/models/malaria.dart';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
@@ -87,6 +88,21 @@ class DatabaseHelper {
     return await _db.rawQuery('SELECT * from $malariaTable ORDER BY id desc');
   }
 
+  // GET SINGLE MALARIA RECORD
+  Future<Map<String, dynamic>> getMalariaById(int id) async {
+    _db = await _createDatabase();
+    List<Map<String, dynamic>> results = await _db.query(
+      malariaTable,
+      where: 'id=?',
+      whereArgs: [id],
+    );
+    if (results.isEmpty) {
+      return {};
+    }
+
+    return results.first;
+  }
+
   // GET ALL UNSYNCED MALARIA RECORDS
   Future<List<Map<String, dynamic>>> getAllUnsyncedMalaria() async {
     _db = await _createDatabase();
@@ -135,6 +151,18 @@ class DatabaseHelper {
       }
     });
     await _db.close();
+  }
+
+  // DELETE ALL SYNCED MALARIA RECORDS
+  Future<int> deleteSyncedMalaria() async {
+    _db = await _createDatabase();
+    int deletedCount = await _db.delete(
+      malariaTable,
+      where: 'sync_status = ?',
+      whereArgs: ['UPLOADED'],
+    );
+    await _db.close();
+    return deletedCount;
   }
 
   // INSERT INTO VOLUNTEER TABLE

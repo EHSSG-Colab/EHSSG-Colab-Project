@@ -16,8 +16,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> init() async {
     //dart function to initialize the token
     token =
-        await SharedPrefService
-            .getToken(); //get the token form shared preferences(local storage)chceck from laravel token
+        await SharedPrefService.getToken(); //get the token form shared preferences(local storage)chceck from laravel token
 
     if (token.isNotEmpty) {
       isAuthenticated = true;

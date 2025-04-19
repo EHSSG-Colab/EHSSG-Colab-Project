@@ -9,15 +9,20 @@ class AppTheme {
     return const TextStyle(fontFamily: 'Urbanist', fontSize: 15);
   }
 
+  TextStyle labelMediumBold() {
+    return const TextStyle(
+      fontFamily: 'Urbanist',
+      fontSize: 15,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
   TextStyle labelLarge() {
     return const TextStyle(fontFamily: 'Urbanist', fontSize: 20);
   }
 
   TextStyle labelSmall() {
-    return const TextStyle(
-      fontFamily: 'Montserrat',
-      fontSize: 10,
-    );
+    return const TextStyle(fontFamily: 'Montserrat', fontSize: 10);
   }
 
   TextStyle labelSmallBold() {
@@ -124,3 +129,4 @@ class AppTheme {
     return kToolbarHeight;
   }
 }
+

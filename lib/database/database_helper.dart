@@ -165,6 +165,22 @@ class DatabaseHelper {
     return deletedCount;
   }
 
+  /// Checks if there are any synced malaria records in the database
+  /// Returns true if there are any records with 'UPLOADED' sync status
+  Future<bool> hasSyncedRecords() async {
+    _db = await _createDatabase();
+    List<Map<String, dynamic>> syncedData = await _db.query(
+      malariaTable,
+      where: 'sync_status = ?',
+      whereArgs: ['UPLOADED'],
+      limit:
+          1, // We only need to know if at least one exists, so limit query to 1 record
+    );
+
+    // Return true if at least one synced record exists
+    return syncedData.isNotEmpty;
+  }
+
   // INSERT INTO VOLUNTEER TABLE
   Future<int> insertVol(Map<String, dynamic> volunteer) async {
     _db = await _createDatabase();

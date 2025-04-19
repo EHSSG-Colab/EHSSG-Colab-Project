@@ -39,6 +39,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
 
   // Instantiate ApiService as late since token value will be fetched later
   late ApiService _apiService;
+
+  // determines whether enable or disable the Send button
+  bool _hasUnsyncedRecords = false;
+  // determines whether enable or disable the More button
+  bool _hasSyncedRecords = false;
   // INIT
   @override
   void initState() {
@@ -47,12 +52,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
     // making sure to run fetch token first
     _fetchToken().then((_) {
       _fetchData();
+      _checkUnsyncedRecords();
+      _checkSyncedRecords();
     });
   }
 
   // get local malaria case data
   void _fetchData() {
     Provider.of<MalariaProvider>(context, listen: false).fetchCases();
+    _checkUnsyncedRecords();
+    _checkSyncedRecords();
   }
 
   // get authentication token
@@ -73,6 +82,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _fetchData();
+      _checkUnsyncedRecords();
+      _checkSyncedRecords();
     }
   }
 
@@ -89,9 +100,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
             title: _appBarTitle(),
             actions: [
               MyIconTextButton(
-                onPressed: () => _showUploadConfirmationDialog(),
+                // Disable the button when there is no unsynced records
+                onPressed:
+                    _hasUnsyncedRecords
+                        ? () => _showUploadConfirmationDialog()
+                        : null,
                 icon: AppIcons().pendingSyncIcon(),
                 label: 'Send',
+                // Opacity styling based on number of unsynced malaria records
+                opacity: _hasUnsyncedRecords ? 1.0 : 0.5,
               ),
               sizedBoxh10(),
               _buildAppBarMoreButton(),
@@ -206,6 +223,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
 
         bool responseHandlerOutput = await _synchronizationHelper
             .handleResponse(result['response'] as http.Response, data);
+
+        if (responseHandlerOutput) {
+          _checkUnsyncedRecords();
+          _checkSyncedRecords();
+          return true;
+        }
         return responseHandlerOutput;
       } catch (e) {
         EasyLoading.showError('Error uploading data - $e');
@@ -221,6 +244,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
   Widget _buildAppBarMoreButton() {
     return VerticalMoreIconButton(
       icon: AppIcons().moreIcon(),
+      // Only enable button when there are synced records to delete
+      enabled: _hasSyncedRecords,
+      // Apply opacity styling based on whether there are synced records
+      opacity: _hasSyncedRecords ? 1.0 : 0.5,
       menuItems: [
         PopupMenuItem(
           child: ListTile(
@@ -293,12 +320,39 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
           'Deleted $deletedCount synchronized malaria records.',
         );
         _fetchData();
+        _checkUnsyncedRecords();
+        _checkSyncedRecords();
       } else {
         EasyLoading.showError('No more records to delete');
       }
     } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError('Error deleting records - $e');
+    }
+  }
+
+  /// Checks if there are any unsynced malaria records in the database
+  /// Updates the _hasUnsyncedRecords state variable
+  Future<void> _checkUnsyncedRecords() async {
+    // Get all unsynced malaria records from the database
+    List<Map<String, dynamic>> pendingData =
+        await _databaseHelper.getAllUnsyncedMalaria();
+    // Update state based on whether there are any pending records
+    setState(() {
+      _hasUnsyncedRecords = pendingData.isNotEmpty;
+    });
+  }
+
+  /// Updates the _hasSyncedRecords state variable based on data from DatabaseHelper
+  Future<void> _checkSyncedRecords() async {
+    // Use the new method in DatabaseHelper to check for synced records
+    bool hasSynced = await _databaseHelper.hasSyncedRecords();
+
+    // Only update state if the value has changed to avoid unnecessary rebuilds
+    if (hasSynced != _hasSyncedRecords) {
+      setState(() {
+        _hasSyncedRecords = hasSynced;
+      });
     }
   }
 }

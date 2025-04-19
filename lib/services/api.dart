@@ -13,8 +13,8 @@ class ApiService {
   ApiService(String token) {
     this.token = token;
   }
-      // final String baseUrl = 'https://iasfilenqt.sharedwithexpose.com/api/';
-  final String baseUrl = 'http://172.20.20.209:8000/api/';
+  // final String baseUrl = 'https://iasfilenqt.sharedwithexpose.com/api/';
+  final String baseUrl = 'http://192.168.1.106:8000/api/';
 
   Future<void> login(String email, String password) async {
     String uri = '${baseUrl}login';
@@ -70,53 +70,21 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('name');
   }
+
+  // Post malaria records in json to api end point
+  // The json in string format is going to be posted to the api end point as request body
+  // The api response will be displayed in map object
+  Future<Map<String, dynamic>> postMalariaDataToApi(String data) async {
+    // URI to post malaria data
+    String malariaUri = '${baseUrl}mobile-sync';
+    // Get http client
+    http.Client client = http.Client();
+    http.Response response = await client.post(
+      Uri.parse(malariaUri),
+      headers: {'Content-Type': 'application/json'},
+      body: data,
+    );
+    client.close();
+    return {'response': response};
+  }
 }
-
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-
-// class ApiService {
-//   String token; // removed late keyword to make the token optional
-//   late bool error;
-//   late int userId;
-//   late String name;
-//   late String message;
-//   late String errorMessage;
-
-//   // constructor class is refactored. Made the token optional as the new user may not have a token during the first time login.
-//   ApiService({this.token = ''});
-
-//   final String baseUrl = 'https://goe4mgblni.sharedwithexpose.com/api/';
-//   Future<void> login(String email, String password) async {
-//     String uri = '${baseUrl}login';
-
-//     // api call is wrapped in a try catch block
-//     try {
-//       var response = await http.post(
-//         Uri.parse(uri),
-//         body: {'email': email, 'password': password},
-//       );
-//       var authResponse = jsonDecode(response.body);
-//       if (response.statusCode == 200) {
-//         token = authResponse['info']['token'] ?? '';
-//         error = false;
-//         userId = authResponse['info']['user_id'] ?? 0;
-//         name = authResponse['info']['name'] ?? '';
-//         message = authResponse['message'] ?? '';
-//         print(response.body);
-//       } else {
-//         error = true;
-//         message = authResponse['message'] ?? 'Login failed';
-//         errorMessage = authResponse['info'] ?? 'Unknown error';
-//         throw Exception(
-//           '$message. $errorMessage',
-//         ); //throw an exception if the response is not successful alerting the user of the error
-//       }
-//     } catch (e) {
-//       error = true;
-//       message = 'Login failed';
-//       errorMessage = e.toString();
-//       throw Exception(errorMessage);
-//     }
-//   }
-// }

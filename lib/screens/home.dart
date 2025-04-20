@@ -190,8 +190,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver
                               margin: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppTheme().highlightColor().withOpacity(
-                                  0.1,
+                                color: AppTheme().highlightColor().withAlpha(
+                                  20,
                                 ),
                               ),
                               child: SizedBox(

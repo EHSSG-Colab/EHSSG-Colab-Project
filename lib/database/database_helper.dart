@@ -109,7 +109,6 @@ class DatabaseHelper {
       'SELECT * FROM $malariaTable WHERE sync_status=?',
       ['PENDING'],
     );
-    await _db.close();
     return data;
   }
 

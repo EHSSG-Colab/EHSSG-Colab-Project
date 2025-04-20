@@ -53,7 +53,10 @@ class MyListTile extends StatelessWidget {
     }
 
     return ListTile(
-      title: Text(label, style: AppTheme().labelMedium()),
+      title: Text(
+        label,
+        style: const TextStyle(color: Colors.black, fontSize: 12),
+      ),
       subtitle: Align(
         alignment: Alignment.centerLeft,
         child: Container(

@@ -22,25 +22,21 @@ class MyFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
       visible: isVisible,
-      child: label != null
-          ? FloatingActionButton.extended(
-              onPressed: onPressed,
-              backgroundColor: backgroundColor ?? AppTheme().secondaryColor(),
-              tooltip: tooltip ?? 'Floating Button',
-              icon: icon,
-              label: Text(
-                label!,
-                style: TextStyle(
-                  color: AppTheme().primaryLightColor(),
-                ),
+      child:
+          label != null
+              ? FloatingActionButton.extended(
+                onPressed: onPressed,
+                backgroundColor: backgroundColor ?? AppTheme().secondaryColor(),
+                tooltip: tooltip ?? 'Floating Button',
+                icon: icon,
+                label: Text(label!, style: AppTheme().buttonLabel()),
+              )
+              : FloatingActionButton(
+                onPressed: onPressed,
+                backgroundColor: backgroundColor ?? AppTheme().secondaryColor(),
+                tooltip: tooltip ?? 'Floating Button',
+                child: icon,
               ),
-            )
-          : FloatingActionButton(
-              onPressed: onPressed,
-              backgroundColor: backgroundColor ?? AppTheme().secondaryColor(),
-              tooltip: tooltip ?? 'Floating Button',
-              child: icon,
-            ),
     );
   }
 }

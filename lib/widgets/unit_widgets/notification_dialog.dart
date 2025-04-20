@@ -25,7 +25,7 @@ class NotificationDialog extends StatelessWidget {
           },
           child: Text(
             'Cancel',
-            style: AppTheme().labelMedium(),
+            style: TextStyle(color: AppTheme().secondaryColor()),
           ),
         ),
         TextButton(
@@ -34,8 +34,9 @@ class NotificationDialog extends StatelessWidget {
             await onClick();
           },
           style: ButtonStyle(
-            backgroundColor:
-                WidgetStateProperty.all<Color>(AppTheme().secondaryColor()),
+            backgroundColor: WidgetStateProperty.all<Color>(
+              AppTheme().secondaryColor(),
+            ),
           ),
           child: const Text('OK', style: TextStyle(color: Colors.white)),
         ),

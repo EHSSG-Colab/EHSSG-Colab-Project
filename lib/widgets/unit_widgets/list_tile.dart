@@ -26,29 +26,29 @@ class MyListTile extends StatelessWidget {
 
     switch (color) {
       case TileColor.primary:
-        backgroundColor = colorScheme.primary.withOpacity(0.1);
-        borderColor = colorScheme.primary.withOpacity(0.3);
+        backgroundColor = colorScheme.primary.withAlpha(20);
+        borderColor = colorScheme.primary.withAlpha(50);
         textColor = colorScheme.primary;
         break;
       case TileColor.secondary:
-        backgroundColor = colorScheme.secondary.withOpacity(0.1);
-        borderColor = colorScheme.secondary;
+        backgroundColor = colorScheme.secondary.withAlpha(20);
+        borderColor = colorScheme.secondary.withAlpha(50);
         textColor = colorScheme.secondary;
         break;
       case TileColor.danger:
-        backgroundColor = colorScheme.error.withOpacity(0.1);
-        borderColor = colorScheme.error.withOpacity(0.3);
+        backgroundColor = colorScheme.error.withAlpha(20);
+        borderColor = colorScheme.error.withAlpha(50);
         textColor = colorScheme.error;
         break;
       case TileColor.warning:
-        backgroundColor = Colors.orange.withOpacity(0.1);
-        borderColor = Colors.orange.withOpacity(0.3);
+        backgroundColor = Colors.orange;
+        borderColor = Colors.orange;
         textColor = Colors.orange;
         break;
       case TileColor.info:
-        backgroundColor = Colors.blue.withOpacity(0.1);
+        backgroundColor = Colors.blue;
         textColor = Colors.blue;
-        borderColor = Colors.blue.withOpacity(0.3);
+        borderColor = Colors.blue;
         break;
     }
 

@@ -103,10 +103,7 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
       canPop: context.read<VolunteerProvider>().volunteers.isNotEmpty,
       appBar: MyAppBar(
         hasBackArrow: false,
-        title: Text(
-          '${widget.operation} Volunteer',
-          style: AppTheme().displayLarge(),
-        ),
+        title: Text('${widget.operation} Volunteer'),
         actions: [
           if (widget.operation == 'Edit')
             TappableIcon(
@@ -143,6 +140,7 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
           MyTextFormField(
             myController: _VolunteerNameController,
             labelText: 'please enter volunteer name',
+            placeholderText: 'please enter volunteer name',
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter volunteer name.';
@@ -202,14 +200,14 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
           ),
 
           sizedBoxh20(),
-          
+
           Row(
             children: [
               // submit button
               Expanded(
                 flex: 2,
                 child: MyButton(
-                  buttonLabel: 'Save Profile',
+                  buttonLabel: 'Save volunteer',
                   onPressed: _submit,
                 ),
               ),

@@ -5,14 +5,12 @@ class SharedPrefService {
   static Future<void> setToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    print('Token saved: $token');
   }
 
   // Retrieve API token
   static Future<String> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    print('Retrieved token: $token');
     return token;
   }
 
@@ -20,14 +18,12 @@ class SharedPrefService {
   static Future<void> setUserId(int userId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('userId', userId);
-    print('User ID saved: $userId');
   }
 
   // Retrieve user ID
   static Future<int> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userId') ?? 0;
-    print('Retrieved user ID: $userId');
     return userId;
   }
 
@@ -35,14 +31,12 @@ class SharedPrefService {
   static Future<void> setName(String name) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', name);
-    print('User name saved: $name');
   }
 
   // Retrieve user name
   static Future<String> getName() async {
     final prefs = await SharedPreferences.getInstance();
     final name = prefs.getString('userName') ?? '';
-    print('Retrieved user name: $name');
     return name;
   }
 
@@ -62,14 +56,12 @@ class SharedPrefService {
   static Future<void> setEmail(String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
-    print('Email saved: $email');
   }
 
   // Retrieve email
   static Future<String> getEmail() async {
     final prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email') ?? '';
-    print('Retrieved email: $email');
     return email;
   }
 
@@ -82,7 +74,6 @@ class SharedPrefService {
       'userName': prefs.getString('userName') ?? '',
       'email': prefs.getString('email') ?? '',
     };
-    print('Retrieved login data: $loginData');
     return loginData;
   }
 
@@ -108,11 +99,11 @@ class SharedPrefService {
     final prefs = await SharedPreferences.getInstance();
 
     // get userId as int and convert to string
-     final userId = prefs.getInt('userId');
-     final userIdString = userId != null ? userId.toString() : '';
+    final userId = prefs.getInt('userId');
+    final userIdString = userId != null ? userId.toString() : '';
 
     final userInfo = {
-       'userId': userIdString,
+      'userId': userIdString,
       'userName': prefs.getString('userName') ?? '',
       'userTownship': prefs.getString('userTownship') ?? '',
       'userVillage': prefs.getString('userVillage') ?? '',
@@ -132,10 +123,6 @@ class SharedPrefService {
     await prefs.setString('volunteerName', volunteerName);
     await prefs.setString('volunteerTownship', volunteerTownship);
     await prefs.setString('volunteerVillage', volunteerVillage);
-
-    print(
-      'Volunteer details saved: {userName: $volunteerName, userTownship: $volunteerTownship, userVillage: $volunteerVillage,}',
-    );
   }
 
   // Retrieve volunteer details
@@ -147,7 +134,6 @@ class SharedPrefService {
       'volunteerTownship': prefs.getString('volunteerTownship') ?? '',
       'volunteerVillage': prefs.getString('volunteerVillage') ?? '',
     };
-    print('Retrieved volunteer details: $volunteerInfo');
     return volunteerInfo;
   }
 

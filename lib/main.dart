@@ -11,6 +11,7 @@ import 'package:malaria_report_mobile/widgets/unit_widgets/nav_wrapper.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/volunteer_provider.dart';
+import 'screens/update_malaria.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,6 +78,12 @@ class MyApp extends StatelessWidget {
                       // Otherwise return the Navwrapper
                       return const NavWrapper();
                     },
+                    // Update malaria route
+                    '/update-malaria':
+                        (context) => const UpdateMalaria(
+                          operation: 'Add',
+                          navigateToIndex: 0,
+                        ),
                   },
                   theme: ThemeData(
                     fontFamily: 'Inter',

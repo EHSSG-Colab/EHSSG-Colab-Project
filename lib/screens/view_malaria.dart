@@ -8,7 +8,6 @@ import 'package:malaria_report_mobile/utils/malaria_actions.dart';
 import 'package:malaria_report_mobile/utils/string_utils.dart';
 import 'package:malaria_report_mobile/widgets/layouts/scaffold_for_scroll_view.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/app_bar.dart';
-import 'package:malaria_report_mobile/widgets/unit_widgets/elevated_button.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/list_tile.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/nav_wrapper.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/sized_box.dart';
@@ -18,11 +17,11 @@ import 'package:provider/provider.dart';
 class ViewMalaria extends StatefulWidget {
   final int navigateToIndex; // page to navigate after the job is done
   final int id; // malaria record id
-  
+
   const ViewMalaria({
-    super.key, 
-    required this.navigateToIndex, 
-    required this.id
+    super.key,
+    required this.navigateToIndex,
+    required this.id,
   });
 
   @override
@@ -47,17 +46,14 @@ class _ViewMalariaState extends State<ViewMalaria> {
         leadingIcon: Icons.arrow_back_ios,
         leadingIconOnPressed: () {
           Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const NavWrapper(
-                        initialIndex: 0,
-                      )),
-              (route) => false);
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NavWrapper(initialIndex: 0),
+            ),
+            (route) => false,
+          );
         },
-        title: Text(
-          'Malaria Case Report',
-          style: AppTheme().displayLarge(),
-        ),
+        title: Text('Malaria Case Report', style: AppTheme().displayLarge()),
         actions: [_buildAppBarMoreActions()],
       ),
       children: [
@@ -66,7 +62,8 @@ class _ViewMalariaState extends State<ViewMalaria> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return SizedBox(
-                height: MediaQuery.of(context).size.height -
+                height:
+                    MediaQuery.of(context).size.height -
                     AppBar().preferredSize.height -
                     MediaQuery.of(context).padding.top,
                 child: Center(
@@ -78,13 +75,9 @@ class _ViewMalariaState extends State<ViewMalaria> {
                 ),
               );
             } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
+              return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(
-                child: Text('Malaria record not found'),
-              );
+              return const Center(child: Text('Malaria record not found'));
             } else {
               final malaria = snapshot.data!;
               return Column(
@@ -95,13 +88,11 @@ class _ViewMalariaState extends State<ViewMalaria> {
                     label: 'Date of RDT',
                     value: formatDateString(malaria.dateOfRdt),
                   ),
-                  MyListTile(
-                    label: 'Patient Name',
-                    value: malaria.patientName,
-                  ),
+                  MyListTile(label: 'Patient Name', value: malaria.patientName),
                   MyListTile(
                     label: 'Age',
-                    value: '${malaria.patientAge} ${capitalizeFirstLetter(malaria.ageUnit)}(s)',
+                    value:
+                        '${malaria.patientAge} ${capitalizeFirstLetter(malaria.ageUnit)}(s)',
                   ),
                   sizedBoxh30(),
                   _buildEditAction(),
@@ -112,15 +103,17 @@ class _ViewMalariaState extends State<ViewMalaria> {
               );
             }
           },
-        )
+        ),
       ],
     );
   }
 
   // load malaria from database
   Future<Malaria?> _loadMalariaData() async {
-    return await Provider.of<MalariaProvider>(context, listen: false)
-        .getMalariaById(widget.id);
+    return await Provider.of<MalariaProvider>(
+      context,
+      listen: false,
+    ).getMalariaById(widget.id);
   }
 
   Widget _buildAppBarMoreActions() {
@@ -154,10 +147,7 @@ class _ViewMalariaState extends State<ViewMalaria> {
   Widget _buildEditAction() {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _editAction,
-        child: const Text('Edit'),
-      ),
+      child: ElevatedButton(onPressed: _editAction, child: const Text('Edit')),
     );
   }
 
@@ -165,15 +155,14 @@ class _ViewMalariaState extends State<ViewMalaria> {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
-        onPressed: () => Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const NavWrapper(
-              initialIndex: 0,
+        onPressed:
+            () => Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavWrapper(initialIndex: 0),
+              ),
+              (route) => false,
             ),
-          ),
-          (route) => false,
-        ),
         child: const Text('Cancel'),
       ),
     );
@@ -183,11 +172,12 @@ class _ViewMalariaState extends State<ViewMalaria> {
     return Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => UpdateMalaria(
-          navigateToIndex: 0,
-          operation: 'Edit',
-          id: widget.id,
-        ),
+        builder:
+            (BuildContext context) => UpdateMalaria(
+              navigateToIndex: 0,
+              operation: 'Edit',
+              id: widget.id,
+            ),
       ),
       (route) => false,
     );

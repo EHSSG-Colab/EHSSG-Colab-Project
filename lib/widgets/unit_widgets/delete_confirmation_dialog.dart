@@ -26,7 +26,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
           },
           child: Text(
             'Cancel',
-            style: AppTheme().labelMedium(),
+            style: TextStyle(color: AppTheme().rosyColor()),
           ),
         ),
         TextButton(
@@ -35,8 +35,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
             await onDelete();
           },
           style: ButtonStyle(
-            backgroundColor:
-                WidgetStateProperty.all<Color>(AppTheme().rosyColor()),
+            backgroundColor: WidgetStateProperty.all<Color>(
+              AppTheme().rosyColor(),
+            ),
           ),
           child: const Text('Delete', style: TextStyle(color: Colors.white)),
         ),

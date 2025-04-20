@@ -17,12 +17,12 @@ class MalariaActions {
         EasyLoading.showSuccess('Record deleted successfully');
         // Navigate back to home screen
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const NavWrapper(
-                      initialIndex: 0,
-                    )),
-            (route) => false);
+          context,
+          MaterialPageRoute(
+            builder: (context) => const NavWrapper(initialIndex: 0),
+          ),
+          (route) => false,
+        );
       } else {
         EasyLoading.showError('Failed to delete record');
       }
@@ -34,40 +34,43 @@ class MalariaActions {
 
   /// Shows a confirmation dialog before deleting a record
   static Future<bool> showDeleteConfirmationDialog(
-      BuildContext context, String message) async {
+    BuildContext context,
+    String message,
+  ) async {
     return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Confirm Delete'),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-              ),
-              child: const Text(
-                'Delete',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.red),
+                  ),
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
-        );
-      },
-    ) ?? false; // Return false if dialog is dismissed
+              ],
+            );
+          },
+        ) ??
+        false; // Return false if dialog is dismissed
   }
 }

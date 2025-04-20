@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 import '../database/database_helper.dart';
 import '../models/malaria.dart';

@@ -17,7 +17,6 @@ import 'package:malaria_report_mobile/widgets/layouts/scaffold_for_scroll_view.d
 import 'package:malaria_report_mobile/widgets/unit_widgets/app_bar.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/checkbox.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/divider.dart';
-import 'package:malaria_report_mobile/widgets/unit_widgets/elevated_button.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/list_tile.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/nav_wrapper.dart';
 import 'package:malaria_report_mobile/widgets/unit_widgets/notification_dialog.dart';
@@ -136,7 +135,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
             builder: (BuildContext context) {
               return NotificationDialog(
                 title: 'Volunteer Not Available',
-                content: 'Please add a volunteer first',
+                content: 'Please add a malaria volunteer first.',
                 onClick:
                     () => Navigator.pushAndRemoveUntil(
                       context,
@@ -173,10 +172,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
             (route) => false,
           );
         },
-        title: Text(
-          '${widget.operation} Malaria Case Report',
-          style: AppTheme().displayLarge(),
-        ),
+        title: Text('${widget.operation} Malaria Case Report'),
         actions: [
           if (widget.operation == 'Edit')
             VerticalMoreIconButton(
@@ -597,7 +593,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _isPregnant,
     onChanged: (value) {
       setState(() {
-        _isPregnant = value ?? false;
+        _isPregnant = value;
       });
     },
   );
@@ -607,7 +603,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _isLactatingMother,
     onChanged: (value) {
       setState(() {
-        _isLactatingMother = value ?? false;
+        _isLactatingMother = value;
       });
     },
   );
@@ -703,7 +699,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
         initialValue: _act24,
         onChanged: (value) {
           setState(() {
-            _act24 = value ?? false;
+            _act24 = value;
           });
         },
       ),
@@ -727,7 +723,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
         initialValue: _act18,
         onChanged: (value) {
           setState(() {
-            _act18 = value ?? false;
+            _act18 = value;
           });
         },
       ),
@@ -751,7 +747,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
         initialValue: _act12,
         onChanged: (value) {
           setState(() {
-            _act12 = value ?? false;
+            _act12 = value;
           });
         },
       ),
@@ -775,7 +771,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
         initialValue: _act6,
         onChanged: (value) {
           setState(() {
-            _act6 = value ?? false;
+            _act6 = value;
           });
         },
       ),
@@ -799,7 +795,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
         initialValue: _chloroquine,
         onChanged: (value) {
           setState(() {
-            _chloroquine = value ?? false;
+            _chloroquine = value;
           });
         },
       ),
@@ -823,7 +819,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
         initialValue: _primaquine,
         onChanged: (value) {
           setState(() {
-            _primaquine = value ?? false;
+            _primaquine = value;
           });
         },
       ),
@@ -849,7 +845,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _isReferred,
     onChanged: (value) {
       setState(() {
-        _isReferred = value ?? false;
+        _isReferred = value;
       });
     },
   );
@@ -859,7 +855,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _isDead,
     onChanged: (value) {
       setState(() {
-        _isDead = value ?? false;
+        _isDead = value;
       });
     },
   );
@@ -890,7 +886,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _hasTravelled,
     onChanged: (value) {
       setState(() {
-        _hasTravelled = value ?? false;
+        _hasTravelled = value;
       });
     },
   );
@@ -928,7 +924,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _isDisabled,
     onChanged: (value) {
       setState(() {
-        _isDisabled = value ?? false;
+        _isDisabled = value;
       });
     },
   );
@@ -938,7 +934,7 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
     initialValue: _isIdp,
     onChanged: (value) {
       setState(() {
-        _isIdp = value ?? false;
+        _isIdp = value;
       });
     },
   );

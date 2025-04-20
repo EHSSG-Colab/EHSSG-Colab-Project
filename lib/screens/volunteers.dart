@@ -31,73 +31,85 @@ class Volunteers extends StatelessWidget {
           floatingActionButton: MyFloatingButton(
             label: 'Add Volunteer',
             icon: AppIcons().addOutlineicon(),
-            onPressed: () => Navigator.push(
-              context,
-                MaterialPageRoute(
-                  builder: (context) => const UpdateVolunteer(
-                    operation: 'Add',
-                    navigateToIndex: 2,
-                  )
-                )
-            )
-          ),
-          child: volunteers.isEmpty
-          ?
-          const EmptyListMessage(
-            message: 'No volunteers yet.',
-            icon: Icons.group,
-            actionMessage: 'Please tap Add Volunteer button to add new information.'
-          ) :
-          ListView.builder(
-            itemCount: volunteers.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  if (index == 0) sizedBoxh20(),
-                  MyListTileRecordsNoBadge(
-                    caption: volunteers[index].volName,
-                    label: 'Township: ${volunteers[index].volTsp}, Village: ${volunteers[index].volVillage}',
-                    leadingIcon: AppIcons().volunteerFilledIcon(),
-                    trailingButton: Container(
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme().highlightColor().withOpacity(0.1),
-                      ),
-                       child: SizedBox(
-                        height: double.infinity,
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: TappableIcon(
-                            icon: AppIcons().editIcon(),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) => UpdateVolunteer(
-                                              navigateToIndex: 2,
-                                              operation: 'Edit',
-                                              id: volunteers[index].id,
-                                              volName: volunteers[index].volName,
-                                               volTsp: volunteers[index].volTsp,
-                                               volVillage:volunteers[index].volVillage,
-                                            )
-                                          )
-                              );
-                            }
-                          )
-                        )
-                       )
-                    )
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => const UpdateVolunteer(
+                          operation: 'Add',
+                          navigateToIndex: 2,
+                        ),
                   ),
-                  if (index == volunteers.length - 1) sizedBoxh50(),
-                ]
-              );
-            }
-          )
+                ),
+          ),
+          child:
+              volunteers.isEmpty
+                  ? const EmptyListMessage(
+                    message: 'No volunteers yet.',
+                    icon: Icons.group,
+                    actionMessage:
+                        'Please tap Add Volunteer button to add new information.',
+                  )
+                  : ListView.builder(
+                    itemCount: volunteers.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          if (index == 0) sizedBoxh20(),
+                          MyListTileRecordsNoBadge(
+                            caption: volunteers[index].volName,
+                            label:
+                                'Township: ${volunteers[index].volTsp}, Village: ${volunteers[index].volVillage}',
+                            leadingIcon: AppIcons().volunteerFilledIcon(),
+                            trailingButton: Container(
+                              margin: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppTheme().highlightColor().withAlpha(
+                                  50,
+                                ),
+                              ),
+                              child: SizedBox(
+                                height: double.infinity,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: TappableIcon(
+                                    icon: AppIcons().editIcon(),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (
+                                                BuildContext context,
+                                              ) => UpdateVolunteer(
+                                                navigateToIndex: 2,
+                                                operation: 'Edit',
+                                                id: volunteers[index].id,
+                                                volName:
+                                                    volunteers[index].volName,
+                                                volTsp:
+                                                    volunteers[index].volTsp,
+                                                volVillage:
+                                                    volunteers[index]
+                                                        .volVillage,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (index == volunteers.length - 1) sizedBoxh50(),
+                        ],
+                      );
+                    },
+                  ),
         );
-      }
+      },
     );
-    
   }
 }

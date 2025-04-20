@@ -77,7 +77,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
       canPop: context.read<ProfileProvider>().isProfileComplete,
       appBar: MyAppBar(
         hasBackArrow: context.read<ProfileProvider>().isProfileComplete,
-        title: Text('Update Profile', style: AppTheme().displayLarge()),
+        title: Text('Update Profile'),
       ),
       children: children,
     );

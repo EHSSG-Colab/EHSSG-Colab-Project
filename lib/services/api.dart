@@ -10,9 +10,7 @@ class ApiService {
   late String message;
   late String errorMessage;
 
-  ApiService(String token) {
-    this.token = token;
-  }
+  ApiService(this.token);
   // final String baseUrl = 'https://iasfilenqt.sharedwithexpose.com/api/';
   final String baseUrl = 'http://192.168.1.106:8000/api/';
 

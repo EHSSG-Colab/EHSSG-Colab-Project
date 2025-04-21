@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:malaria_report_mobile/themes/app_icons.dart';
@@ -69,74 +68,83 @@ class _SimpleSelectState extends State<SimpleSelect> {
           },
           builder: (FormFieldState<String> state) {
             return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DropdownButtonFormField<String>(
-                    value: widget.options.contains(_selectedValue)
-                        ? _selectedValue
-                        : null,
-                    hint: Text(
-                      widget.placeholder ?? 'Select an option',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.normal,
-                        color: AppTheme().grayTextColor(),
-                      ),
-                    ),
-                    disabledHint: Text(
-                      widget.disabledHintText ?? 'disabled',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.normal,
-                        color: AppTheme().disabledTextColor(),
-                      ),
-                    ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownButtonFormField<String>(
+                  value:
+                      widget.options.contains(_selectedValue)
+                          ? _selectedValue
+                          : null,
+                  hint: Text(
+                    widget.placeholder ?? 'Select an option',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.normal,
-                      fontSize: 16,
                       color: AppTheme().grayTextColor(),
                     ),
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                        enabledBorder: AppTheme().normalOutlineInputBorder(),
-                        focusedBorder: AppTheme().focusedOutlineInputBorder(),
-                        contentPadding:
-                            const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                        filled: true,
-                        fillColor: AppTheme().primaryLightColor(),
-                        suffixIcon:
-                            widget.showClearIcon && _selectedValue != null
-                                ? IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _selectedValue = null;
-                                      });
-                                      widget.onSelected(null);
-                                      state.didChange(null);
-                                      if (widget.validator != null) {
-                                        state.validate();
-                                      }
-                                    },
-                                    icon: AppIcons().clearIcon(),
-                                    color: AppTheme().secondaryDarkColor())
-                                : Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Icon(
-                                      AppIcons().dropdownIcon().icon,
-                                      color: AppTheme().secondaryDarkColor(),
-                                    ),
-                                  )),
-                    icon: const SizedBox.shrink(),
-                    items: widget.options.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: widget.disabled
-                        ? null
-                        : (String? newValue) {
+                  ),
+                  disabledHint: Text(
+                    widget.disabledHintText ?? 'disabled',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.normal,
+                      color: AppTheme().disabledTextColor(),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15,
+                    color: AppTheme().grayTextColor(),
+                  ),
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    enabledBorder: AppTheme().normalOutlineInputBorder(),
+                    focusedBorder: AppTheme().focusedOutlineInputBorder(),
+                    contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                      20,
+                      0,
+                      0,
+                      0,
+                    ),
+                    filled: true,
+                    fillColor: AppTheme().primaryLightColor(),
+                    suffixIcon:
+                        widget.showClearIcon && _selectedValue != null
+                            ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedValue = null;
+                                });
+                                widget.onSelected(null);
+                                state.didChange(null);
+                                if (widget.validator != null) {
+                                  state.validate();
+                                }
+                              },
+                              icon: AppIcons().clearIcon(),
+                              color: AppTheme().secondaryDarkColor(),
+                            )
+                            : Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Icon(
+                                AppIcons().dropdownIcon().icon,
+                                color: AppTheme().secondaryDarkColor(),
+                              ),
+                            ),
+                  ),
+                  icon: const SizedBox.shrink(),
+                  items:
+                      widget.options.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                  onChanged:
+                      widget.disabled
+                          ? null
+                          : (String? newValue) {
                             setState(() {
                               _selectedValue = newValue;
                             });
@@ -144,17 +152,19 @@ class _SimpleSelectState extends State<SimpleSelect> {
                             state.didChange(newValue);
                             state.validate();
                           },
-                  ),
-                  if (state.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 12.0),
-                      child: Text(
-                        state.errorText ?? '',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.error),
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, left: 12.0),
+                    child: Text(
+                      state.errorText ?? '',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                ]);
+                  ),
+              ],
+            );
           },
         ),
       ],

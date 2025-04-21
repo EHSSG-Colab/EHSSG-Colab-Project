@@ -261,6 +261,12 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
           onDateSelected: () {
             setState(() {});
           },
+          onAgeUnitChanged: () {
+            setState(() {});
+          },
+          onGenderChanged: () {
+            setState(() {});
+          },
         ),
         onStepContinue: () => _handleStepContinue(),
         onStepCancel: _currentStep > 0 ? () => _handleStepCancel() : null,
@@ -344,6 +350,9 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
           if (_currentStep > 0)
             Expanded(
               child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: AppTheme().secondaryColor()),
+                ),
                 onPressed: details.onStepCancel,
                 child: const Text('Back'),
               ),

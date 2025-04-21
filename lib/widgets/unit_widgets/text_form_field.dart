@@ -12,16 +12,17 @@ class MyTextFormField extends StatelessWidget {
   final bool isNumeric;
   final bool isRequired;
   final FormFieldSetter<String>? onSaved;
-  const MyTextFormField(
-      {super.key,
-      required this.myController,
-      required this.labelText,
-      this.placeholderText,
-      required this.validator,
-      this.onSaved,
-      this.keyboardType,
-      this.isNumeric = false,
-      this.isRequired = false,});
+  const MyTextFormField({
+    super.key,
+    required this.myController,
+    required this.labelText,
+    this.placeholderText,
+    required this.validator,
+    this.onSaved,
+    this.keyboardType,
+    this.isNumeric = false,
+    this.isRequired = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +50,12 @@ class MyTextFormField extends StatelessWidget {
           textCapitalization: TextCapitalization.words,
           validator: validator,
           onSaved: onSaved,
-          inputFormatters: isNumeric ? [FilteringTextInputFormatter.digitsOnly] : null,
+          inputFormatters:
+              isNumeric ? [FilteringTextInputFormatter.digitsOnly] : null,
           style: TextStyle(
             fontFamily: 'Inter',
             color: AppTheme().grayTextColor(),
+            fontSize: 15,
           ),
           cursorColor: AppTheme().secondaryDarkColor(),
           decoration: InputDecoration(
@@ -80,11 +83,12 @@ class MyPasswordFormField extends StatefulWidget {
   final TextEditingController myController;
   final String labelText;
   final FormFieldValidator<String> validator;
-  const MyPasswordFormField(
-      {super.key,
-      required this.myController,
-      required this.labelText,
-      required this.validator});
+  const MyPasswordFormField({
+    super.key,
+    required this.myController,
+    required this.labelText,
+    required this.validator,
+  });
 
   @override
   State<MyPasswordFormField> createState() => _MyPasswordFormFieldState();
@@ -102,9 +106,7 @@ class _MyPasswordFormFieldState extends State<MyPasswordFormField> {
       validator: widget.validator,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        labelStyle: const TextStyle(
-          fontFamily: 'Inter',
-        ),
+        labelStyle: const TextStyle(fontFamily: 'Inter'),
         contentPadding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         enabledBorder: AppTheme().normalOutlineInputBorder(),
@@ -119,9 +121,11 @@ class _MyPasswordFormFieldState extends State<MyPasswordFormField> {
               obscureText = !obscureText;
             });
           },
-          child: Icon(obscureText
-              ? Icons.visibility_off_outlined
-              : Icons.visibility_outlined),
+          child: Icon(
+            obscureText
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+          ),
         ),
       ),
     );

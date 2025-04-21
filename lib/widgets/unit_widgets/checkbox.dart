@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:malaria_report_mobile/themes/app_theme.dart';
 
-
-
 class MyCheckBoxListTile extends StatefulWidget {
   final String title;
   final bool initialValue;
@@ -36,33 +34,43 @@ class _MyCheckBoxListTileState extends State<MyCheckBoxListTile> {
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(
         widget.title,
-        style: AppTheme().labelMedium().copyWith(
-              color: widget.disabled
+        style: TextStyle(
+          fontSize: 12,
+          color:
+              widget.disabled
                   ? AppTheme().disabledTextColor()
                   : AppTheme().grayTextColor(),
-            ),
+        ),
+        // style: AppTheme().labelMedium().copyWith(
+        //       color: widget.disabled
+        //           ? AppTheme().disabledTextColor()
+        //           : AppTheme().grayTextColor(),
+        //     ),
       ),
       value: isChecked,
       checkboxShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
       ),
       side: BorderSide(
-        color: widget.disabled
-            ? AppTheme().disabledTextColor()
-            : AppTheme().grayTextColor(),
+        color:
+            widget.disabled
+                ? AppTheme().disabledTextColor()
+                : AppTheme().grayTextColor(),
         width: 2,
       ),
-      activeColor: widget.disabled
-          ? AppTheme().disabledTextColor()
-          : AppTheme().secondaryColor(),
-      onChanged: widget.disabled
-          ? null
-          : (value) {
-              setState(() {
-                isChecked = value!;
-              });
-              widget.onChanged(isChecked);
-            },
+      activeColor:
+          widget.disabled
+              ? AppTheme().disabledTextColor()
+              : AppTheme().secondaryColor(),
+      onChanged:
+          widget.disabled
+              ? null
+              : (value) {
+                setState(() {
+                  isChecked = value!;
+                });
+                widget.onChanged(isChecked);
+              },
     );
   }
 }

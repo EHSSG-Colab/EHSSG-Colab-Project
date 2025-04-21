@@ -19,6 +19,8 @@ class MalariaFormSteps {
     int currentStep, {
     Function? onVolunteerSelected,
     Function? onDateSelected,
+    Function? onAgeUnitChanged,
+    Function? onGenderChanged,
   }) {
     return [
       _buildVolunteerStep(
@@ -34,6 +36,8 @@ class MalariaFormSteps {
         formKeys[1],
         currentStep,
         onDateSelected: onDateSelected,
+        onAgeUnitChanged: onAgeUnitChanged,
+        onGenderChanged: onGenderChanged,
       ),
       _buildTestResultsStep(context, formData, formKeys[2], currentStep),
       _buildTreatmentStep(context, formData, formKeys[3], currentStep),
@@ -79,6 +83,8 @@ class MalariaFormSteps {
     GlobalKey<FormState> formKey,
     int currentStep, {
     Function? onDateSelected,
+    Function? onAgeUnitChanged,
+    Function? onGenderChanged,
   }) {
     return Step(
       title: const Text('Patient Information'),
@@ -96,11 +102,19 @@ class MalariaFormSteps {
             sizedBoxh10(),
             MalariaFormFields.buildNameField(context, formData),
             sizedBoxh10(),
-            MalariaFormFields.buildAgeWrapper(context, formData),
+            MalariaFormFields.buildAgeWrapper(
+              context,
+              formData,
+              onAgeUnitChanged: onAgeUnitChanged,
+            ),
             sizedBoxh10(),
             MalariaFormFields.buildAddressField(context, formData),
             sizedBoxh10(),
-            MalariaFormFields.buildGenderRadioButtons(context, formData),
+            MalariaFormFields.buildGenderRadioButtons(
+              context,
+              formData,
+              onGenderChanged: onGenderChanged,
+            ),
             sizedBoxh10(),
             if (formData.selectedGender == 'Female') ...[
               MalariaFormFields.buildIsPregnantCheckbox(context, formData),
@@ -123,15 +137,20 @@ class MalariaFormSteps {
     BuildContext context,
     MalariaFormData formData,
     GlobalKey<FormState> formKey,
-    int currentStep,
-  ) {
+    int currentStep, {
+    Function? onRdtResultChanged,
+  }) {
     return Step(
       title: const Text('Test Results'),
       content: Form(
         key: formKey,
         child: Column(
           children: [
-            MalariaFormFields.buildRdtResultRadioButtons(context, formData),
+            MalariaFormFields.buildRdtResultRadioButtons(
+              context,
+              formData,
+              onRdtResultChanged: onRdtResultChanged,
+            ),
             sizedBoxh10(),
             if (formData.selectedRdtResult == 'Positive') ...[
               const MyDivider(),
@@ -156,8 +175,9 @@ class MalariaFormSteps {
     BuildContext context,
     MalariaFormData formData,
     GlobalKey<FormState> formKey,
-    int currentStep,
-  ) {
+    int currentStep, {
+    Function? onTreatmentChanged,
+  }) {
     return Step(
       title: const Text('Treatment'),
       content: Form(
@@ -166,7 +186,11 @@ class MalariaFormSteps {
             formData.selectedRdtResult == 'Positive'
                 ? Column(
                   children: [
-                    MalariaFormFields.buildTreatmentFields(context, formData),
+                    MalariaFormFields.buildTreatmentFields(
+                      context,
+                      formData,
+                      onTreatmentChanged: onTreatmentChanged,
+                    ),
                     sizedBoxh10(),
                     const MyDivider(),
                     MalariaFormFields.buildReferralCheckbox(context, formData),
@@ -196,8 +220,9 @@ class MalariaFormSteps {
     BuildContext context,
     MalariaFormData formData,
     GlobalKey<FormState> formKey,
-    int currentStep,
-  ) {
+    int currentStep, {
+    Function? on,
+  }) {
     return Step(
       title: const Text('Additional Information'),
       content: Form(

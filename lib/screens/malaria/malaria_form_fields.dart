@@ -246,8 +246,9 @@ class MalariaFormFields {
 
   static Widget buildAgeWrapper(
     BuildContext context,
-    MalariaFormData formData,
-  ) {
+    MalariaFormData formData, {
+    Function? onAgeUnitChanged,
+  }) {
     return Row(
       children: [
         Expanded(
@@ -260,6 +261,10 @@ class MalariaFormFields {
             isHorizontal: true,
             onChanged: (value) {
               formData.selectedAgeUnit = value;
+              // Update the UI after age unit is changed
+              if (onAgeUnitChanged != null) {
+                onAgeUnitChanged();
+              }
             },
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -270,6 +275,7 @@ class MalariaFormFields {
             isRequired: true,
           ),
         ),
+        sizedBoxw10(),
         Expanded(
           flex: 1,
           child: Column(
@@ -317,8 +323,9 @@ class MalariaFormFields {
 
   static Widget buildGenderRadioButtons(
     BuildContext context,
-    MalariaFormData formData,
-  ) {
+    MalariaFormData formData, {
+    Function? onGenderChanged,
+  }) {
     return MyRadio(
       options: const ['Male', 'Female', 'Other'],
       optionLabels: const ['Male', 'Female', 'Other'],
@@ -330,6 +337,10 @@ class MalariaFormFields {
         if (value != 'Female') {
           formData.isPregnant = false;
           formData.isLactatingMother = false;
+        }
+        // Update the UI after gender is changed
+        if (onGenderChanged != null) {
+          onGenderChanged();
         }
       },
       validator: (value) {
@@ -371,8 +382,9 @@ class MalariaFormFields {
   // Test result fields
   static Widget buildRdtResultRadioButtons(
     BuildContext context,
-    MalariaFormData formData,
-  ) {
+    MalariaFormData formData, {
+    Function? onRdtResultChanged,
+  }) {
     return MyRadio(
       options: const ['Positive', 'Negative'],
       optionLabels: const ['Positive', 'Negative'],
@@ -401,6 +413,10 @@ class MalariaFormFields {
           formData.isDead = false;
           formData.receivedTreatment = null;
           formData.hasTravelled = false;
+        }
+        // Update the UI after RDT result is changed
+        if (onRdtResultChanged != null) {
+          onRdtResultChanged();
         }
       },
       validator: (value) {
@@ -468,8 +484,9 @@ class MalariaFormFields {
   // Treatment fields
   static Widget buildTreatmentFields(
     BuildContext context,
-    MalariaFormData formData,
-  ) {
+    MalariaFormData formData, {
+    Function? onTreatmentChanged,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -484,6 +501,10 @@ class MalariaFormFields {
           initialValue: formData.act24,
           onChanged: (value) {
             formData.act24 = value;
+            // Update the UI after treatment is changed
+            if (onTreatmentChanged != null) {
+              onTreatmentChanged();
+            }
           },
         ),
         if (formData.act24)
@@ -507,6 +528,10 @@ class MalariaFormFields {
           initialValue: formData.act18,
           onChanged: (value) {
             formData.act18 = value;
+            // Update the UI after treatment is changed
+            if (onTreatmentChanged != null) {
+              onTreatmentChanged();
+            }
           },
         ),
         if (formData.act18)
@@ -530,6 +555,10 @@ class MalariaFormFields {
           initialValue: formData.act12,
           onChanged: (value) {
             formData.act12 = value;
+            // Update the UI after treatment is changed
+            if (onTreatmentChanged != null) {
+              onTreatmentChanged();
+            }
           },
         ),
         if (formData.act12)
@@ -553,6 +582,10 @@ class MalariaFormFields {
           initialValue: formData.act6,
           onChanged: (value) {
             formData.act6 = value;
+            // Update the UI after treatment is changed
+            if (onTreatmentChanged != null) {
+              onTreatmentChanged();
+            }
           },
         ),
         if (formData.act6)
@@ -576,6 +609,10 @@ class MalariaFormFields {
           initialValue: formData.chloroquine,
           onChanged: (value) {
             formData.chloroquine = value;
+            // Update the UI after treatment is changed
+            if (onTreatmentChanged != null) {
+              onTreatmentChanged();
+            }
           },
         ),
         if (formData.chloroquine)
@@ -599,6 +636,10 @@ class MalariaFormFields {
           initialValue: formData.primaquine,
           onChanged: (value) {
             formData.primaquine = value;
+            // Update the UI after treatment is changed
+            if (onTreatmentChanged != null) {
+              onTreatmentChanged();
+            }
           },
         ),
         if (formData.primaquine)
@@ -685,8 +726,9 @@ class MalariaFormFields {
 
   static Widget buildOccupationSelect(
     BuildContext context,
-    MalariaFormData formData,
-  ) {
+    MalariaFormData formData, {
+    Function? onOccupationChanged,
+  }) {
     return SimpleSelect(
       options: Constants.jobs,
       label: 'Occupation',
@@ -696,6 +738,10 @@ class MalariaFormFields {
         formData.selectedOccupation = value;
         if (value != 'Other') {
           formData.otherOccupationController.text = '';
+        }
+        // Update the UI after occupation is changed
+        if (onOccupationChanged != null) {
+          onOccupationChanged();
         }
       },
     );

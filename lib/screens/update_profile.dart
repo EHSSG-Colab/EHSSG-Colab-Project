@@ -7,7 +7,6 @@ import '../constants/dropdown_options.dart';
 
 import '../providers/profile_provider.dart';
 import '../services/shared_preferences.dart';
-import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
 import '../widgets/unit_widgets/checkbox.dart';

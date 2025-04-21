@@ -1,6 +1,8 @@
 import 'package:malaria_report_mobile/models/malaria.dart';
 import 'package:malaria_report_mobile/screens/malaria/malaria_form_data.dart';
 
+import '../../constants/dropdown_options.dart';
+
 /// Class responsible for transforming data between the Malaria model and form data
 /// This separates the data transformation logic from the UI and validation
 class MalariaDataTransformer {
@@ -103,14 +105,14 @@ class MalariaDataTransformer {
     formData.hasTravelled = malaria.hasTravelled == 'Yes';
 
     // Handle occupation and other fields
-    // Check if occupation is in the predefined list, otherwise set to "Other"
+    // Handle occupation properly by checking against the actual Constants.jobs list
     if (malaria.occupation.isNotEmpty) {
-      // This requires access to Constants.jobs
-      // If occupation is not in the predefined list, set to "Other"
-      // This part might need adjustment based on your Constants class
-      if (isJobInPredefinedList(malaria.occupation)) {
+      // Check if the saved occupation is in the predefined Constants.jobs list
+      if (Constants.jobs.contains(malaria.occupation)) {
+        // If it is, set the selected occupation as it is
         formData.selectedOccupation = malaria.occupation;
       } else {
+        // If it's not, treat it as 'Other' and set the text
         formData.selectedOccupation = 'Other';
         formData.otherOccupationController.text = malaria.occupation;
       }
@@ -125,26 +127,5 @@ class MalariaDataTransformer {
     formData.selectedVolunteer = malaria.volunteerName;
     formData.volunteerTownshipPlaceholder = malaria.volunteerTownship;
     formData.volunteerVillagePlaceholder = malaria.volunteerVillage;
-  }
-
-  /// Helper method to check if a job is in the predefined list
-  /// This would ideally use Constants.jobs but for simplicity we're hardcoding common jobs
-  static bool isJobInPredefinedList(String job) {
-    const commonJobs = [
-      'Farmer',
-      'Teacher',
-      'Student',
-      'Housewife',
-      'Trader',
-      'Businessman',
-      'Driver',
-      'Laborer',
-      'Government',
-      'Private',
-      'Unemployed',
-      'Other',
-    ];
-
-    return commonJobs.contains(job);
   }
 }

@@ -94,7 +94,7 @@ class _SimpleSelectState extends State<SimpleSelect> {
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.normal,
-                    fontSize: 15,
+                    fontSize: MediaQuery.of(context).size.width * 0.03,
                     color: AppTheme().grayTextColor(),
                   ),
                   isExpanded: true,

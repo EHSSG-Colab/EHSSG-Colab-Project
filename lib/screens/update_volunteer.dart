@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../constants/dropdown_options.dart';
 import '../providers/volunteer_provider.dart';
 import '../themes/app_icons.dart';
-import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
 import '../widgets/unit_widgets/delete_confirmation_dialog.dart';

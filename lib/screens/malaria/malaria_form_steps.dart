@@ -21,6 +21,9 @@ class MalariaFormSteps {
     Function? onDateSelected,
     Function? onAgeUnitChanged,
     Function? onGenderChanged,
+    Function? onRdtResultChanged,
+    Function? onTreatmentChanged,
+    Function? onOccupationChanged,
   }) {
     return [
       _buildVolunteerStep(
@@ -39,9 +42,27 @@ class MalariaFormSteps {
         onAgeUnitChanged: onAgeUnitChanged,
         onGenderChanged: onGenderChanged,
       ),
-      _buildTestResultsStep(context, formData, formKeys[2], currentStep),
-      _buildTreatmentStep(context, formData, formKeys[3], currentStep),
-      _buildAdditionalInfoStep(context, formData, formKeys[4], currentStep),
+      _buildTestResultsStep(
+        context,
+        formData,
+        formKeys[2],
+        currentStep,
+        onRdtResultChanged: onRdtResultChanged,
+      ),
+      _buildTreatmentStep(
+        context,
+        formData,
+        formKeys[3],
+        currentStep,
+        onTreatmentChanged: onTreatmentChanged,
+      ),
+      _buildAdditionalInfoStep(
+        context,
+        formData,
+        formKeys[4],
+        currentStep,
+        onOccupationChanged: onOccupationChanged,
+      ),
     ];
   }
 
@@ -221,7 +242,7 @@ class MalariaFormSteps {
     MalariaFormData formData,
     GlobalKey<FormState> formKey,
     int currentStep, {
-    Function? on,
+    Function? onOccupationChanged,
   }) {
     return Step(
       title: const Text('Additional Information'),
@@ -232,7 +253,11 @@ class MalariaFormSteps {
             if (formData.selectedRdtResult == 'Positive')
               MalariaFormFields.buildHasTravelledCheckbox(context, formData),
             sizedBoxh10(),
-            MalariaFormFields.buildOccupationSelect(context, formData),
+            MalariaFormFields.buildOccupationSelect(
+              context,
+              formData,
+              onOccupationChanged: onOccupationChanged,
+            ),
             if (formData.selectedOccupation == 'Other')
               MalariaFormFields.buildOtherOccupationField(context, formData),
             sizedBoxh10(),

@@ -55,7 +55,7 @@ class MyTextFormField extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             color: AppTheme().grayTextColor(),
-            fontSize: 15,
+            fontSize: MediaQuery.of(context).size.width * 0.03,
           ),
           cursorColor: AppTheme().secondaryDarkColor(),
           decoration: InputDecoration(

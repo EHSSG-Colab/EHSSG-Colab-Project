@@ -21,6 +21,8 @@ import 'package:malaria_report_mobile/screens/malaria/malaria_form_steps.dart';
 import 'package:malaria_report_mobile/screens/malaria/malaria_data_handlers.dart';
 import 'package:malaria_report_mobile/screens/malaria/malaria_form_utils.dart';
 
+import '../widgets/unit_widgets/elevated_button.dart';
+
 class UpdateMalaria extends StatefulWidget {
   final int navigateToIndex; // page to navigate after the job is done
   final String operation; // Add or Edit
@@ -231,9 +233,9 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
               textAlign: TextAlign.center,
             ),
             sizedBoxh30(),
-            ElevatedButton(
+            MyButton(
               onPressed: () => _navigateToHome(),
-              child: const Text('Go Back'),
+              buttonLabel: 'Go Back',
             ),
           ],
         ),
@@ -267,6 +269,15 @@ class _UpdateMalariaState extends State<UpdateMalaria> {
           onGenderChanged: () {
             setState(() {});
           },
+          onRdtResultChanged: () {
+            setState(() {});
+          },
+          onTreatmentChanged: () {
+            setState(() {});
+          },
+          onOccupationChanged: () {
+            setState(() {});
+          }
         ),
         onStepContinue: () => _handleStepContinue(),
         onStepCancel: _currentStep > 0 ? () => _handleStepCancel() : null,

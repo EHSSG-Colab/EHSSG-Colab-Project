@@ -22,6 +22,9 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
   String errorMessage = '';
 
+  // To track if login is in progress
+  bool _isLoggingIn = false;
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldForScrollView(
@@ -102,6 +105,7 @@ class _LoginState extends State<Login> {
             myController: emailController,
             keyboardType: TextInputType.emailAddress,
             labelText: 'Email',
+            placeholderText: 'Enter your email',
             validator: (String? value) {
               if (value!.trim().isEmpty) {
                 return 'Please enter email';
@@ -123,7 +127,8 @@ class _LoginState extends State<Login> {
           sizedBoxh10(),
           MyButton(
             buttonLabel: 'Log In',
-            onPressed: () {
+            // Login button will be disabled when logging in process
+            onPressed: _isLoggingIn ? (){} : () {
               submit();
             },
             backgroundColor: WidgetStatePropertyAll(
@@ -142,50 +147,34 @@ class _LoginState extends State<Login> {
       return;
     }
     if (await NetworkCheck.isConnected()) {
+      // Set login state to true to disable button
+      setState(() {
+        _isLoggingIn = true;
+      });
       EasyLoading.show(status: 'logging in...');
       final AuthProvider provider = Provider.of<AuthProvider>(
         context,
         listen: false,
       );
       try {
-        // final apiResponse =
+        // login with user input credentials
         await provider.login(emailController.text, passwordController.text);
 
-        // ApiResponse? userInfo = await SharedPrefService.getUserApiInfo();
-        // if (userInfo != null) {
-        //   print('User ID: ${userInfo.apiUserId}');
-        //   print('Username: ${userInfo.apiUsername}');
-        //   print('Email: ${userInfo.apiEmail}');
-        //   print('Township: ${userInfo.apiTownship}');
-        //   print('Token: ${userInfo.token}');
-        // }
-        // String userId = await SharedPrefService.getApiUserId();
-        // String username = await SharedPrefService.getApiUsername();
-        // String email = await SharedPrefService.getApiEmail();
-        // String township = await SharedPrefService.getApiTownship();
-        // String token = await SharedPrefService.getApiToken();
-
-        // print('Username: ${apiResponse.apiUsername}');
-        // print('Email: ${apiResponse.apiEmail}');
-        // print('User ID: ${apiResponse.apiUserId}');
-        // print('Township: ${apiResponse.township}');
-
-        // // Assuming apiResponse contains user information
-        // await SharedPrefService.storeUserApiInfo(
-        //   username: apiResponse.username,
-        //   email: apiResponse.email,
-        //   userId: apiResponse.userId,
-        //   township: apiResponse.township,
-        // );
-
+        // Show success message
         EasyLoading.showSuccess('Logged in successfully!');
       } catch (Exception) {
         setState(() {
           errorMessage = Exception.toString().replaceAll('Exception: ', '');
           EasyLoading.showError(errorMessage);
         });
+      } finally {
+        // Reset login state to false to enable button
+        setState(() {
+          _isLoggingIn = false;
+        });
       }
     } else {
+      // Show error message if no internet connection
       EasyLoading.showError('No Internet Connection');
     }
   }
@@ -203,62 +192,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-  //      Future<void> submit() async {
-  //   final form = _formKey.currentState;
-  //   if (!form!.validate()) {
-  //     return;
-  //   }
-  //   if (await NetworkCheck.isConnected()) {
-  //     EasyLoading.show(status: 'logging in...');
-  //     final AuthProvider provider =
-  //         Provider.of<AuthProvider>(context, listen: false);
-  //     try {
-  //       final apiResponse = await provider.login(emailController.text, passwordController.text);
-
-  //       // Store user information from API response
-  //       await SharedPrefService.storeUserApiInfo(
-  //         username: apiResponse.username,
-  //         email: apiResponse.email,
-  //         userId: apiResponse.userId,
-  //         township: apiResponse.township,
-  //       );
-
-  //       EasyLoading.showSuccess('Logged in successfully!');
-  //     } catch (Exception) {
-  //       setState(() {
-  //         errorMessage = Exception.toString().replaceAll('Exception: ', '');
-  //         EasyLoading.showError(errorMessage);
-  //       });
-  //     }
-  //   } else {
-  //     return EasyLoading.showError('No Internet Connection');
-  //   }
-  // }
-  // final response = await provider.login(emailController.text, passwordController.text);
-  // final userData = response.data; // Assuming response has a data property
-
-  // // Store user information from API response
-  // await SharedPrefService.storeUserApiInfo(
-  //   username: userData['name'] ?? '', // adjust field names according to your API
-  //   email: emailController.text,
-  //   userId: userData['id']?.toString() ?? '',
-  //   township: userData['township'] ?? '',
-  // );
-
-  // EasyLoading.showSuccess('Logged in successfully!');
-  // // Navigate to home screen or dashboard
-  // Navigator.pushReplacementNamed(context, '/home');
-
-//   Widget buildCopyrightMessage() {
-//     return const Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Text(
-//           'Developed by <YOUR NAME>.',
-//           style: TextStyle(fontSize: 10),
-//           textAlign: TextAlign.center,
-//         ),
-//       ],
-//     );
-//   }
-// }

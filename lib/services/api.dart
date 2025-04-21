@@ -12,7 +12,8 @@ class ApiService {
 
   ApiService(this.token);
   // final String baseUrl = 'https://iasfilenqt.sharedwithexpose.com/api/';
-  final String baseUrl = 'http://192.168.1.106:8000/api/';
+  // final String baseUrl = 'http://192.168.1.106:8000/api/';
+final String baseUrl = 'http://172.20.20.10:8000/api/';
 
   Future<void> login(String email, String password) async {
     String uri = '${baseUrl}login';

@@ -41,8 +41,8 @@ class MyListTile extends StatelessWidget {
         textColor = colorScheme.error;
         break;
       case TileColor.warning:
-        backgroundColor = Colors.orange;
-        borderColor = Colors.orange;
+        backgroundColor = Colors.orange.withAlpha(20);
+        borderColor = Colors.orange.withAlpha(50);
         textColor = Colors.orange;
         break;
       case TileColor.info:

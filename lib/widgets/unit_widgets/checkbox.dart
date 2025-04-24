@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../themes/app_theme.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
 class MyCheckBoxListTile extends StatefulWidget {
   final String title;
@@ -35,12 +34,18 @@ class _MyCheckBoxListTileState extends State<MyCheckBoxListTile> {
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(
         widget.title,
-        style: AppTheme().labelMedium().copyWith(
+        style: TextStyle(
+          fontSize: 12,
           color:
               widget.disabled
                   ? AppTheme().disabledTextColor()
                   : AppTheme().grayTextColor(),
         ),
+        // style: AppTheme().labelMedium().copyWith(
+        //       color: widget.disabled
+        //           ? AppTheme().disabledTextColor()
+        //           : AppTheme().grayTextColor(),
+        //     ),
       ),
       value: isChecked,
       checkboxShape: RoundedRectangleBorder(

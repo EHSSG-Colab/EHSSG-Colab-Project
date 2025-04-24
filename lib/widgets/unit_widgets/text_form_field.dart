@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../themes/app_theme.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
 class MyTextFormField extends StatelessWidget {
   final TextEditingController myController;
@@ -55,6 +54,7 @@ class MyTextFormField extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             color: AppTheme().grayTextColor(),
+            fontSize: MediaQuery.of(context).size.width * 0.03,
           ),
           cursorColor: AppTheme().secondaryDarkColor(),
           decoration: InputDecoration(

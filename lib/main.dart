@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_case_report_01/screens/update_profile.dart'; // Add this import
-import 'package:malaria_case_report_01/provider/auth/auth_provider.dart';
-import 'package:malaria_case_report_01/provider/malaria_provider.dart';
-import 'package:malaria_case_report_01/provider/profile_provider.dart';
-import 'package:malaria_case_report_01/provider/volunteer_provider.dart';
-import 'package:malaria_case_report_01/screens/login.dart' show Login;
+import 'package:malaria_case_report_01/providers/auth/auth_provider.dart';
+import 'package:malaria_case_report_01/providers/malaria_provider.dart';
+import 'package:malaria_case_report_01/providers/profile_provider.dart';
+import 'package:malaria_case_report_01/screens/login.dart';
+import 'package:malaria_case_report_01/screens/update_profile.dart';
 import 'package:malaria_case_report_01/themes/app_theme.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/nav_wrapper.dart';
 import 'package:provider/provider.dart';
+
+import 'providers/volunteer_provider.dart';
+import 'screens/update_malaria.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,6 +77,12 @@ class MyApp extends StatelessWidget {
                       // Otherwise return the Navwrapper
                       return const NavWrapper();
                     },
+                    // Update malaria route
+                    '/update-malaria':
+                        (context) => const UpdateMalaria(
+                          operation: 'Add',
+                          navigateToIndex: 0,
+                        ),
                   },
                   theme: ThemeData(
                     fontFamily: 'Inter',

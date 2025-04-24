@@ -35,4 +35,4 @@ flutter:
       fonts:
         - asset: assets/fonts/Urbanist.ttf
   assets:
-    - assets/images/health_care_logo.png
+    - assets/images/logo.png

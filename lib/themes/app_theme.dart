@@ -9,6 +9,14 @@ class AppTheme {
     return const TextStyle(fontFamily: 'Urbanist', fontSize: 15);
   }
 
+  TextStyle labelMediumBold() {
+    return const TextStyle(
+      fontFamily: 'Urbanist',
+      fontSize: 15,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
   TextStyle labelLarge() {
     return const TextStyle(fontFamily: 'Urbanist', fontSize: 20);
   }

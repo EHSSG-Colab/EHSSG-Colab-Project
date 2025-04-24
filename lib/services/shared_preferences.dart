@@ -2,14 +2,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefService {
   // Save API token
-  // Switched to static for consistency
   static Future<void> setToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
   }
 
   // Retrieve API token
-  // Made this static for consistency
   static Future<String> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -113,6 +111,30 @@ class SharedPrefService {
       'userOtherVillage': prefs.getString('userOtherVillage') ?? '',
     };
     return userInfo;
+  }
+
+  // Save volunteer details
+  static Future<void> saveVolunteerInfo({
+    required String volunteerName,
+    required String volunteerTownship,
+    required String volunteerVillage,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('volunteerName', volunteerName);
+    await prefs.setString('volunteerTownship', volunteerTownship);
+    await prefs.setString('volunteerVillage', volunteerVillage);
+  }
+
+  // Retrieve volunteer details
+  static Future<Map<String, dynamic>> getvolunteerInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final volunteerInfo = {
+      'volunteerId': prefs.getString('volunteerId') ?? '',
+      'volunteerName': prefs.getString('volunteerName') ?? '',
+      'volunteerTownship': prefs.getString('volunteerTownship') ?? '',
+      'volunteerVillage': prefs.getString('volunteerVillage') ?? '',
+    };
+    return volunteerInfo;
   }
 
   // Clear all data

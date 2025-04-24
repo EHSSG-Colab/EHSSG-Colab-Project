@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
-import '../../themes/app_theme.dart';
-
-class DeleteConfirmationDialog extends StatelessWidget {
+class NotificationDialog extends StatelessWidget {
   final String title;
   final String content;
-  final Function onDelete;
+  final Function onClick;
 
-  const DeleteConfirmationDialog({
+  const NotificationDialog({
     super.key,
     required this.title,
     required this.content,
-    required this.onDelete,
+    required this.onClick,
   });
 
   @override
@@ -26,20 +25,20 @@ class DeleteConfirmationDialog extends StatelessWidget {
           },
           child: Text(
             'Cancel',
-            style: TextStyle(color: AppTheme().rosyColor()),
+            style: TextStyle(color: AppTheme().secondaryColor()),
           ),
         ),
         TextButton(
           onPressed: () async {
             Navigator.pop(context);
-            await onDelete();
+            await onClick();
           },
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all<Color>(
-              AppTheme().rosyColor(),
+              AppTheme().secondaryColor(),
             ),
           ),
-          child: const Text('Delete', style: TextStyle(color: Colors.white)),
+          child: const Text('OK', style: TextStyle(color: Colors.white)),
         ),
       ],
     );

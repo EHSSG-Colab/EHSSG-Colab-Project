@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:malaria_case_report_01/models/volunteers.dart';
-import 'package:malaria_case_report_01/provider/volunteer_provider.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/app_bar.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/floating_button.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/sized_box.dart';
 
 import 'package:provider/provider.dart';
 
+import '../providers/volunteer_provider.dart';
 import '../themes/app_icons.dart';
 import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_lilst_vew.dart';
@@ -60,16 +60,16 @@ class Volunteers extends StatelessWidget {
                         children: [
                           if (index == 0) sizedBoxh20(),
                           MyListTileRecordsNoBadge(
-                            caption: volunteers[index].volName,
+                            caption: volunteers[index].volunteer_name,
                             label:
-                                'Township: ${volunteers[index].volTsp}, Village: ${volunteers[index].volVillage}',
+                                'Township: ${volunteers[index].volunteer_village}, Village: ${volunteers[index].volunteer_village}',
                             leadingIcon: AppIcons().volunteerFilledIcon(),
                             trailingButton: Container(
                               margin: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppTheme().highlightColor().withOpacity(
-                                  0.1,
+                                color: AppTheme().highlightColor().withAlpha(
+                                  50,
                                 ),
                               ),
                               child: SizedBox(
@@ -83,20 +83,21 @@ class Volunteers extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder:
-                                              (
-                                                BuildContext context,
-                                              ) => UpdateVolunteer(
-                                                navigateToIndex: 2,
-                                                operation: 'Edit',
-                                                id: volunteers[index].id,
-                                                volName:
-                                                    volunteers[index].volName,
-                                                volTsp:
-                                                    volunteers[index].volTsp,
-                                                volVillage:
-                                                    volunteers[index]
-                                                        .volVillage,
-                                              ),
+                                              (BuildContext context) =>
+                                                  UpdateVolunteer(
+                                                    navigateToIndex: 2,
+                                                    operation: 'Edit',
+                                                    id: volunteers[index].id,
+                                                    volName:
+                                                        volunteers[index]
+                                                            .volunteer_name,
+                                                    volTsp:
+                                                        volunteers[index]
+                                                            .volunteer_township,
+                                                    volVillage:
+                                                        volunteers[index]
+                                                            .volunteer_village,
+                                                  ),
                                         ),
                                       );
                                     },

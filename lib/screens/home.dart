@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:malaria_case_report_01/database/database_helper.dart';
-import 'package:malaria_case_report_01/screens/add_report.dart'; // Import AddReport page
-import 'package:malaria_case_report_01/widgets/unit_widgets/app_bar.dart';
-import 'package:malaria_case_report_01/widgets/unit_widgets/floating_button.dart';
+import 'package:malaria_case_report_01/models/malaria.dart';
+import 'package:malaria_case_report_01/providers/malaria_provider.dart';
+import 'package:malaria_case_report_01/screens/update_malaria.dart';
+import 'package:malaria_case_report_01/screens/view_malaria.dart';
+import 'package:malaria_case_report_01/services/api.dart';
+import 'package:malaria_case_report_01/services/network_check.dart';
+import 'package:malaria_case_report_01/services/shared_preferences.dart';
+import 'package:malaria_case_report_01/services/synchronization_helper.dart';
 import 'package:malaria_case_report_01/themes/app_icons.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
+import 'package:malaria_case_report_01/widgets/layouts/scaffold_for_lilst_vew.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/app_bar.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/badge_text.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/empty_list_message.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/floating_button.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/icon_text_button.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/list_tile_records_with_badge.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/sized_box.dart';
+import 'package:malaria_case_report_01/widgets/unit_widgets/vertical_more_icon_button.dart';
+
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,241 +32,501 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
-  List<Map<String, dynamic>> _volunteers = [];
-  bool _isLoading = true;
-  int totalVolunteers = 0;
-  int townships = 0;
-  int villages = 0;
+class _HomeState extends State<Home> with WidgetsBindingObserver
+// WidgetBindingObserver is used to automatically update the widget when the information stored in local database has changes
+{
+  // get instance of synchronization helper a.k.a instantiation
+  final SynchronizationHelper _synchronizationHelper = SynchronizationHelper();
 
+  // Instantiate DatabaseHelper
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
+
+  // Authentication token is required to send data to database
+  late String token;
+
+  // Instantiate ApiService as late since token value will be fetched later
+  late ApiService _apiService;
+
+  // determines whether enable or disable the Send button
+  bool _hasUnsyncedRecords = false;
+  // determines whether enable or disable the More button
+  bool _hasSyncedRecords = false;
+  // INIT
   @override
   void initState() {
     super.initState();
-    _loadVolunteers();
+    WidgetsBinding.instance.addObserver(this);
+    // making sure to run fetch token first
+    _fetchToken().then((_) {
+      _fetchData();
+      _checkUnsyncedRecords();
+      _checkSyncedRecords();
+    });
   }
 
-  Future<void> _loadVolunteers() async {
-    try {
-      final volunteerData = await _dbHelper.getAllVol();
-      final Set<String> uniqueTownships = {};
-      final Set<String> uniqueVillages = {};
+  // get local malaria case data
+  void _fetchData() {
+    Provider.of<MalariaProvider>(context, listen: false).fetchCases();
+    _checkUnsyncedRecords();
+    _checkSyncedRecords();
+  }
 
-      for (var volunteer in volunteerData) {
-        uniqueTownships.add(volunteer['vol_tsp'] ?? '');
-        uniqueVillages.add(volunteer['vol_vil'] ?? '');
-      }
+  // get authentication token
+  Future<void> _fetchToken() async {
+    token = await SharedPrefService.getToken();
 
-      setState(() {
-        _volunteers = volunteerData.reversed.toList();
-        totalVolunteers = volunteerData.length;
-        townships = uniqueTownships.length;
-        villages = uniqueVillages.length;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading volunteers: $e');
-      setState(() => _isLoading = false);
+    // Initialize ApiService with token
+    _apiService = ApiService(token);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _fetchData();
+      _checkUnsyncedRecords();
+      _checkSyncedRecords();
     }
-  }
-
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color bgColor,
-    Color iconColor,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: iconColor, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRecentVolunteersList() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child:
-          _volunteers.isEmpty
-              ? const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(
-                  child: Text(
-                    'No volunteers available',
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                ),
-              )
-              : ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _volunteers.length > 5 ? 5 : _volunteers.length,
-                separatorBuilder: (context, index) => const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  final volunteer = _volunteers[index];
-                  return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.blue.shade50,
-                      radius: 25,
-                      child: Text(
-                        '${index + 1}',
-                        style: TextStyle(
-                          color: Colors.blue.shade700,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      volunteer['vol_name'] ?? 'Unknown',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'Township: ${volunteer['vol_tsp'] ?? 'N/A'}\n'
-                      'Village: ${volunteer['vol_vil'] ?? 'N/A'}',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    isThreeLine: true,
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  );
-                },
-              ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MyAppBar(
-        hasBackArrow: false,
-        title: Text('Malaria App Dashboard'),
+    return Consumer<MalariaProvider>(
+      builder: (context, malariaProvider, child) {
+        // get data from database
+        List<Malaria> malariaCases = malariaProvider.cases;
+
+        return ScaffoldForListView(
+          appBar: MyAppBar(
+            hasBackArrow: false,
+            title: _appBarTitle(),
+            actions: [
+              MyIconTextButton(
+                // Disable the button when there is no unsynced records
+                onPressed:
+                    _hasUnsyncedRecords
+                        ? () => _showUploadConfirmationDialog()
+                        : null,
+                icon: AppIcons().pendingSyncIcon(),
+                label: 'Send',
+                // Opacity styling based on number of unsynced malaria records
+                opacity: _hasUnsyncedRecords ? 1.0 : 0.5,
+              ),
+              sizedBoxh10(),
+              sizedBoxh10(),
+              _buildAppBarMoreButton(),
+            ],
+          ),
+          canPop: false,
+          floatingActionButton: MyFloatingButton(
+            label: 'Add Record',
+            icon: AppIcons().addOutlineicon(),
+            onPressed: () async {
+              // Navigate to add new malaria case screen
+              await Navigator.pushNamed(
+                context,
+                '/update-malaria',
+                arguments: {'navigateToIndex': 0},
+              );
+              _fetchData();
+            },
+          ),
+          child:
+              malariaCases.isEmpty
+                  ? const EmptyListMessage(
+                    message: 'No malaria treatment records have been entered.',
+                    icon: Icons.biotech,
+                    actionMessage:
+                        'Press Add Record to start entering malaria treatment records.',
+                  )
+                  : ListView.builder(
+                    itemCount: malariaCases.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          if (index == 0) sizedBoxh20(),
+                          MyListTileRecordsWithBadge(
+                            caption: malariaCases[index].patient_name,
+                            label:
+                                '${malariaCases[index].age} ${_capitalizeFirstLetter(malariaCases[index].age_unit)}(s)',
+                            leadingIcon:
+                                malariaCases[index].syncStatus == 'PENDING'
+                                    ? AppIcons().pendingSyncIcon()
+                                    : AppIcons().completeSyncIcon(),
+                            badges: [
+                              MyBadgeText(
+                                text: malariaCases[index].sex,
+                                backgroundColor: AppTheme().ehssgOrangeColor(),
+                                textColor: AppTheme().grayTextColor(),
+                              ),
+                              sizedBoxh5(),
+                              malariaCases[index].rdtResult == 'Positive'
+                                  ? MyBadgeText(
+                                    text: _getMpInitials(
+                                      malariaCases[index].malariaParasite,
+                                    ),
+                                    backgroundColor: AppTheme().rosyColor(),
+                                    textColor: Colors.white,
+                                  )
+                                  : MyBadgeText(
+                                    text: 'Neg',
+                                    backgroundColor: AppTheme().grayTextColor(),
+                                    textColor: Colors.white,
+                                  ),
+                              sizedBoxh5(),
+                              MyBadgeText(
+                                text: _formatDate(
+                                  malariaCases[index].test_date,
+                                ),
+                                backgroundColor: AppTheme().accentColor(),
+                                textColor: Colors.black,
+                              ),
+                            ],
+                            trailingButton: Container(
+                              margin: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppTheme().highlightColor().withAlpha(
+                                  20,
+                                ),
+                              ),
+                              child: SizedBox(
+                                height: double.infinity,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: _buildListTileMoreButton(
+                                    malariaCases[index].id!,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (index == malariaCases.length - 1) sizedBoxh50(),
+                        ],
+                      );
+                    },
+                  ),
+        );
+      },
+    );
+  }
+
+  Widget _appBarTitle() {
+    return const Text('Home');
+  }
+
+  // Upload confirmation dialog
+  void _showUploadConfirmationDialog() async {
+    bool isConnected = await NetworkCheck.isConnected();
+
+    if (!isConnected) {
+      EasyLoading.showError('No internet connection');
+      return;
+    }
+
+    // Check for pending records
+    List<Map<String, dynamic>> pendingData =
+        await _databaseHelper.getAllUnsyncedMalaria();
+
+    if (pendingData.isEmpty) {
+      EasyLoading.showError(
+        'All existing malaria records has already been synchronized.',
+      );
+      return;
+    }
+
+    // Show dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Upload'),
+          content: const Text(
+            'All unsynced malaria records will be sent to server.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                bool success = await _uploadData();
+                if (success) {
+                  _fetchData();
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all<Color>(
+                  AppTheme().secondaryDarkColor(),
+                ),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              child: const Text(
+                'Send',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Upload method
+  Future<bool> _uploadData() async {
+    // check connection
+    bool isConnected = await NetworkCheck.isConnected();
+    if (isConnected) {
+      // get data from database
+      List<Map<String, dynamic>> data =
+          await _databaseHelper.getAllUnsyncedMalaria();
+
+      // convert to json
+      String dataJson = _synchronizationHelper.convertToJson(data);
+
+      EasyLoading.showProgress(0.9, status: 'Sending data');
+
+      // Upload to API
+      try {
+        Map<String, dynamic> result = await _apiService.postMalariaDataToApi(
+          dataJson,
+        );
+
+        bool responseHandlerOutput = await _synchronizationHelper
+            .handleResponse(result['response'] as http.Response, data);
+
+        if (responseHandlerOutput) {
+          _checkUnsyncedRecords();
+          _checkSyncedRecords();
+          return true;
+        }
+        return responseHandlerOutput;
+      } catch (e) {
+        EasyLoading.showError('Error uploading data - $e');
+        return false;
+      }
+    } else {
+      EasyLoading.showError('No internet connection!');
+      return false;
+    }
+  }
+
+  // AppBar More Button
+  Widget _buildAppBarMoreButton() {
+    return VerticalMoreIconButton(
+      icon: AppIcons().moreIcon(),
+      // Only enable button when there are synced records to delete
+      enabled: _hasSyncedRecords,
+      // Apply opacity styling based on whether there are synced records
+      opacity: _hasSyncedRecords ? 1.0 : 0.5,
+      menuItems: [
+        PopupMenuItem(
+          child: ListTile(
+            leading: AppIcons().deleteIcon(),
+            iconColor: AppTheme().rosyColor(),
+            title: const Text(
+              'Delete only synced records',
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () async {
+              Navigator.pop(context);
+              bool confirmDeleteSynced = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm deleting synced records'),
+                    content: const Text(
+                      'Are you sure you want to delete synced records?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            AppTheme().rosyColor(),
+                          ),
+                        ),
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+              if (confirmDeleteSynced == true) {
+                await _deleteSyncedRecords();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ListTile More Button
+  Widget _buildListTileMoreButton(int id) => VerticalMoreIconButton(
+    icon: AppIcons().moreIcon(),
+    menuItems: [
+      PopupMenuItem(
+        child: ListTile(
+          leading: AppIcons().viewIcon(),
+          iconColor: AppTheme().highlightColor(),
+          title: Text(
+            'View Details',
+            style: TextStyle(color: AppTheme().highlightColor()),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewMalaria(navigateToIndex: 0, id: id),
+              ),
+            ).then((_) => _fetchData());
+          },
+        ),
       ),
-      backgroundColor: Colors.grey.shade100, // Neutral background color
-      floatingActionButton: MyFloatingButton(
-        label: 'Add Reporter',
-        icon: AppIcons().addOutlineicon(),
-        onPressed:
-            () => Navigator.push(
+      PopupMenuItem(
+        child: ListTile(
+          leading: AppIcons().editIcon(),
+          iconColor: AppTheme().highlightColor(),
+          title: Text(
+            'Edit Record',
+            style: TextStyle(color: AppTheme().highlightColor()),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder:
-                    (context) => const AddReport(), // Navigate to AddReport
-              ),
-            ),
-      ),
-      body: SafeArea(
-        child:
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-                  onRefresh: _loadVolunteers,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: [
-                            _buildStatCard(
-                              'Total Volunteers',
-                              totalVolunteers.toString(),
-                              Icons.people_outline,
-                              Colors.blue.shade50,
-                              Colors.blue.shade700,
-                            ),
-                            _buildStatCard(
-                              'Townships',
-                              townships.toString(),
-                              Icons.location_city_outlined,
-                              Colors.blue.shade50,
-                              Colors.blue.shade700,
-                            ),
-                            _buildStatCard(
-                              'Villages',
-                              villages.toString(),
-                              Icons.home_work_outlined,
-                              Colors.blue.shade50,
-                              Colors.blue.shade700,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        const Text(
-                          'Recent Volunteers List',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _buildRecentVolunteersList(),
-                      ],
+                    (context) => UpdateMalaria(
+                      navigateToIndex: 0,
+                      operation: 'Edit',
+                      id: id,
                     ),
-                  ),
-                ),
+              ),
+            ).then((_) => _fetchData());
+          },
+        ),
       ),
-    );
+    ],
+  );
+
+  // Delete synced records
+  Future<void> _deleteSyncedRecords() async {
+    EasyLoading.showProgress(0.1, status: 'Deleting synced malaria records...');
+    try {
+      int deletedCount = await _databaseHelper.deleteSyncedMalaria();
+      EasyLoading.dismiss();
+
+      if (deletedCount > 0) {
+        EasyLoading.showSuccess(
+          'Deleted $deletedCount synchronized malaria records.',
+        );
+        _fetchData();
+        _checkUnsyncedRecords();
+        _checkSyncedRecords();
+      } else {
+        EasyLoading.showError('No more records to delete');
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Error deleting records - $e');
+    }
+  }
+
+  /// Checks if there are any unsynced malaria records in the database
+  /// Updates the _hasUnsyncedRecords state variable
+  Future<void> _checkUnsyncedRecords() async {
+    // Get all unsynced malaria records from the database
+    List<Map<String, dynamic>> pendingData =
+        await _databaseHelper.getAllUnsyncedMalaria();
+    // Update state based on whether there are any pending records
+    setState(() {
+      _hasUnsyncedRecords = pendingData.isNotEmpty;
+    });
+  }
+
+  /// Updates the _hasSyncedRecords state variable based on data from DatabaseHelper
+  Future<void> _checkSyncedRecords() async {
+    // Use the new method in DatabaseHelper to check for synced records
+    bool hasSynced = await _databaseHelper.hasSyncedRecords();
+
+    // Only update state if the value has changed to avoid unnecessary rebuilds
+    if (hasSynced != _hasSyncedRecords) {
+      setState(() {
+        _hasSyncedRecords = hasSynced;
+      });
+    }
+  }
+
+  // Get malaria parasite initials
+  String _getMpInitials(String mp) {
+    switch (mp.toLowerCase()) {
+      case 'plasmodium falciparum':
+        return 'Pf';
+      case 'plasmodium vivax':
+        return 'Pv';
+      case 'mixed':
+        return 'Mixed';
+      default:
+        return 'N/A';
+    }
+  }
+
+  // Format date from ISO format to d-M-y format
+  String _formatDate(String isoDate) {
+    try {
+      DateTime dateTime = DateTime.parse(isoDate);
+      return DateFormat('d-M-y').format(dateTime);
+    } catch (e) {
+      return isoDate; // Return the original if parsing fails
+    }
+  }
+
+  // Capitalize the first letter of a string
+  String _capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 }

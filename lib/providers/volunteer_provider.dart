@@ -20,7 +20,9 @@ class VolunteerProvider extends ChangeNotifier {
     volunteers =
         localVolunteers.map((data) => Volunteer.fromMap(data)).toList();
 
-    volunteerNames = volunteers.map((volunteer) => volunteer.volName).toList();
+    // Populate volunteerNames using the corrected field name
+    volunteerNames =
+        volunteers.map((volunteer) => volunteer.volunteer_name).toList();
     notifyListeners();
   }
 
@@ -31,9 +33,9 @@ class VolunteerProvider extends ChangeNotifier {
   }) async {
     Volunteer newVolunteer = Volunteer(
       id: null,
-      volName: volunteerName,
-      volTsp: volunteerTownship,
-      volVillage: volunteerVillage,
+      volunteer_name: volunteerName, // Corrected typo
+      volunteer_township: volunteerTownship,
+      volunteer_village: volunteerVillage,
     );
 
     // SAVE THE NEW VOLUNTEER AND GET THE NEW ID FROM LOCAL DATABASE
@@ -53,9 +55,9 @@ class VolunteerProvider extends ChangeNotifier {
   }) async {
     Volunteer updatedVolunteer = Volunteer(
       id: id,
-      volName: volunteerName,
-      volTsp: volunteerTownship,
-      volVillage: volunteerVillage,
+      volunteer_name: volunteerName, // Corrected typo
+      volunteer_township: volunteerTownship,
+      volunteer_village: volunteerVillage,
     );
 
     await DatabaseHelper().updateVol(updatedVolunteer.toMap(), id);

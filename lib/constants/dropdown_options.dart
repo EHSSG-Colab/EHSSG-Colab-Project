@@ -50,6 +50,14 @@ class Constants {
   }
 
   static const List<String> jobs = [
+    'Student',
+    'Teacher',
+    'Monk',
+    'Farmer',
+    'Business',
+    'Government',
+    'Private',
+    'Self Employed',
     'Farming',
     'Rubber Platation',
     'Construction',

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_case_report_01/provider/profile_provider.dart';
 
 import 'package:provider/provider.dart';
 
 import '../constants/dropdown_options.dart';
 
+import '../providers/profile_provider.dart';
 import '../services/shared_preferences.dart';
-import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
 import '../widgets/unit_widgets/checkbox.dart';
@@ -77,7 +76,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
       canPop: context.read<ProfileProvider>().isProfileComplete,
       appBar: MyAppBar(
         hasBackArrow: context.read<ProfileProvider>().isProfileComplete,
-        title: Text('Update Profile', style: AppTheme().displayLarge()),
+        title: Text('Update Profile'),
       ),
       children: children,
     );

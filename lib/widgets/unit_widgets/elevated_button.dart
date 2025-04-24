@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../themes/app_theme.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
 class MyButton extends StatelessWidget {
   const MyButton({

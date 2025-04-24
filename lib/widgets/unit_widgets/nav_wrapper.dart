@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:malaria_case_report_01/screens/home.dart';
 import 'package:malaria_case_report_01/screens/info.dart';
 import 'package:malaria_case_report_01/screens/profile_detail.dart';
+import 'package:malaria_case_report_01/screens/volunteers.dart';
 import 'package:malaria_case_report_01/themes/app_icons.dart';
 import 'package:malaria_case_report_01/themes/app_theme.dart';
 
-import '../../screens/volunteers.dart';
-
 class NavWrapper extends StatefulWidget {
-  // Navigation wrapper is like an array. It starts with 0. The first item of the navigation menu will have an index of 0, the second and index of 1, etc.
-  // By default, the index page as well as the landing page of the navigation wrapper is going to be the first page. Its index would be 0.
+  // The navigation wrapper starts with an index of 0 by default.
+  // The first item of the navigation menu will have an index of 0, the second an index of 1, etc.
   final int initialIndex;
+
   const NavWrapper({super.key, this.initialIndex = 0});
 
   @override
@@ -18,65 +18,45 @@ class NavWrapper extends StatefulWidget {
 }
 
 class _NavWrapperState extends State<NavWrapper> {
-  // selectedIndex is the value selected by the user. When the user press a menu item, its index value will be stored here.
-  // Since the user is not pressing any menu item when the page loads, the selectedIndex is initially 0.
+  // The selected index is the value selected by the user.
+  // When the user presses a menu item, its index value will be stored here.
   int _selectedIndex = 0;
 
-  // This method updates the selectedIndex value based on the user activity
+  // This method updates the selected index value based on user activity.
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  // the initState method called on page load by default
-
   @override
   void initState() {
     super.initState();
-    // redirect to specific page if provided
+    // Redirect to a specific page if an initial index is provided.
     _selectedIndex = widget.initialIndex;
   }
 
-  // list of pages to be added under navigation menu items
-  final List<Widget> _pages = [
-    const Home(),
-    const ProfileDetail(),
-    const Volunteers(), // Fixed typo from 'Volunters' to 'Volunteers'
-    const Info(),
-  ];
+  // List of pages to be added under navigation menu items.
+  final List<Widget> _pages = [Home(), ProfileDetail(), Volunteers(), Info()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // The nav wrapper is just a scoffold with bottom navigation bar.
+      // The nav wrapper is a scaffold with a bottom navigation bar.
       /**
        * Instead of creating a scaffold and navigation bar for every page in our application,
-       * we can just create a scaffold and navigation bar once and use it for all pages.
-       */
-      /** The body of the scaffold will be a page widget.
-       * If the user press the first navigation item, array index of 0 will be passed resuling in _pages[0] which is Home page.
+       * we can create a scaffold and navigation bar once and use it for all pages.
        */
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex:
-            _selectedIndex, // currentIndex is the index of the selected item.
-        onTap:
-            _onItemTapped, // onTap is the method that will be called when the user press a navigation item.
-        /**
-         * type is the type of the navigation bar. fixed is the type of the navigation bar that will always show the labels.
-         * other types are shifting and scrolling.
-         * shifting is the type of the navigation bar that will show the labels when the user press the item.
-         * srcolling is the type of the navigation bar that will show the labels when the user scroll the page.
-         */
-        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex, // The index of the selected item.
+        onTap: _onItemTapped, // Called when the user presses a navigation item.
+        type: BottomNavigationBarType.fixed, // Always show labels.
         selectedItemColor: AppTheme().secondaryColor(),
         unselectedItemColor: AppTheme().highlightColor(),
         showUnselectedLabels: true,
-        /**
-         * Each child item of the bottom navigation bar is an object of BottomNavigationBarItem.
-         */
         items: <BottomNavigationBarItem>[
-          //home menu item
+          // Home menu item
           BottomNavigationBarItem(
             icon:
                 _selectedIndex == 0
@@ -85,7 +65,7 @@ class _NavWrapperState extends State<NavWrapper> {
             label: 'Home',
           ),
 
-          //profile menu item
+          // Profile menu item
           BottomNavigationBarItem(
             icon:
                 _selectedIndex == 1
@@ -94,7 +74,7 @@ class _NavWrapperState extends State<NavWrapper> {
             label: 'Profile',
           ),
 
-          //volunteer menu item
+          // Volunteer menu item
           BottomNavigationBarItem(
             icon:
                 _selectedIndex == 2
@@ -103,7 +83,7 @@ class _NavWrapperState extends State<NavWrapper> {
             label: 'Volunteer',
           ),
 
-          //info menu item
+          // Info menu item
           BottomNavigationBarItem(
             icon:
                 _selectedIndex == 3

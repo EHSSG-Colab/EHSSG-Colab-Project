@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../themes/app_theme.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({
@@ -34,7 +33,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 icon: Icon(leadingIcon),
               )
               : null,
+
       title: title,
+      titleTextStyle: AppTheme().labelLarge(),
       actions: actions,
       backgroundColor: AppTheme().secondaryColor(),
       foregroundColor: Colors.white,

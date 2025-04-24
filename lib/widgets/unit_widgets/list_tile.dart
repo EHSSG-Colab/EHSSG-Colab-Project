@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
-import '../../themes/app_theme.dart';
-
-enum TileColor { primary, secondary, danger, info, warning }
+enum TileColor { primary, secondary, danger, warning, info }
 
 class MyListTile extends StatelessWidget {
   final String label;
@@ -21,39 +20,42 @@ class MyListTile extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     Color backgroundColor;
-    Color borderColor;
     Color textColor;
+    Color borderColor;
 
     switch (color) {
       case TileColor.primary:
-        backgroundColor = colorScheme.primary.withOpacity(0.1);
-        borderColor = colorScheme.primary.withOpacity(0.3);
+        backgroundColor = colorScheme.primary.withAlpha(20);
+        borderColor = colorScheme.primary.withAlpha(50);
         textColor = colorScheme.primary;
         break;
       case TileColor.secondary:
-        backgroundColor = colorScheme.secondary.withOpacity(0.1);
-        borderColor = colorScheme.secondary.withOpacity(0.3);
+        backgroundColor = colorScheme.secondary.withAlpha(20);
+        borderColor = colorScheme.secondary.withAlpha(50);
         textColor = colorScheme.secondary;
         break;
       case TileColor.danger:
-        backgroundColor = colorScheme.error.withOpacity(0.1);
-        borderColor = colorScheme.error.withOpacity(0.3);
+        backgroundColor = colorScheme.error.withAlpha(20);
+        borderColor = colorScheme.error.withAlpha(50);
         textColor = colorScheme.error;
         break;
-      case TileColor.info:
-        backgroundColor = Colors.blue.withOpacity(0.1);
-        borderColor = Colors.blue.withOpacity(0.3);
-        textColor = Colors.blue;
-        break;
       case TileColor.warning:
-        backgroundColor = Colors.orange.withOpacity(0.1);
-        borderColor = Colors.orange.withOpacity(0.3);
+        backgroundColor = Colors.orange.withAlpha(20);
+        borderColor = Colors.orange.withAlpha(50);
         textColor = Colors.orange;
+        break;
+      case TileColor.info:
+        backgroundColor = Colors.blue;
+        textColor = Colors.blue;
+        borderColor = Colors.blue;
         break;
     }
 
     return ListTile(
-      title: Text(label, style: AppTheme().labelMedium()),
+      title: Text(
+        label,
+        style: const TextStyle(color: Colors.black, fontSize: 12),
+      ),
       subtitle: Align(
         alignment: Alignment.centerLeft,
         child: Container(

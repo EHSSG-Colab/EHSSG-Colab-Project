@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_case_report_01/provider/volunteer_provider.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/sized_box.dart';
 
 import 'package:provider/provider.dart';
 import '../constants/dropdown_options.dart';
-
+import '../providers/volunteer_provider.dart';
 import '../themes/app_icons.dart';
-import '../themes/app_theme.dart';
 import '../widgets/layouts/scaffold_for_scroll_view.dart';
 import '../widgets/unit_widgets/app_bar.dart';
 import '../widgets/unit_widgets/delete_confirmation_dialog.dart';
@@ -105,10 +103,7 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
       canPop: context.read<VolunteerProvider>().volunteers.isNotEmpty,
       appBar: MyAppBar(
         hasBackArrow: false,
-        title: Text(
-          '${widget.operation} Volunteer',
-          style: AppTheme().displayLarge(),
-        ),
+        title: Text('${widget.operation} Volunteer'),
         actions: [
           if (widget.operation == 'Edit')
             TappableIcon(
@@ -145,6 +140,7 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
           MyTextFormField(
             myController: _VolunteerNameController,
             labelText: 'please enter volunteer name',
+            placeholderText: 'please enter volunteer name',
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter volunteer name.';
@@ -211,7 +207,7 @@ class _UpdateProfileState extends State<UpdateVolunteer> {
               Expanded(
                 flex: 2,
                 child: MyButton(
-                  buttonLabel: 'Save Profile',
+                  buttonLabel: 'Save volunteer',
                   onPressed: _submit,
                 ),
               ),

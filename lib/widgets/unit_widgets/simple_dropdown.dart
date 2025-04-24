@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../themes/app_icons.dart';
-import '../../themes/app_theme.dart';
+import 'package:malaria_case_report_01/themes/app_icons.dart';
+import 'package:malaria_case_report_01/themes/app_theme.dart';
 
 class SimpleSelect extends StatefulWidget {
   final List<String> options;
@@ -94,7 +93,7 @@ class _SimpleSelectState extends State<SimpleSelect> {
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.normal,
-                    fontSize: 16,
+                    fontSize: MediaQuery.of(context).size.width * 0.03,
                     color: AppTheme().grayTextColor(),
                   ),
                   isExpanded: true,

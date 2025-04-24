@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:malaria_case_report_01/provider/auth/auth_provider.dart';
+import 'package:malaria_case_report_01/providers/auth/auth_provider.dart';
 import 'package:malaria_case_report_01/services/network_check.dart';
 import 'package:malaria_case_report_01/themes/app_theme.dart';
 import 'package:malaria_case_report_01/widgets/layouts/scaffold_for_scroll_view.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/elevated_button.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/sized_box.dart';
 import 'package:malaria_case_report_01/widgets/unit_widgets/text_form_field.dart';
-
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -22,6 +21,9 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   String errorMessage = '';
+
+  // To track if login is in progress
+  bool _isLoggingIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +57,9 @@ class _LoginState extends State<Login> {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Image.asset(
-        'assets/images/health_care_logo.png',
+        'assets/images/logo.png',
         width: 300,
-        height: 200,
+        height: 150,
         fit: BoxFit.contain,
       ),
     );
@@ -77,7 +79,6 @@ class _LoginState extends State<Login> {
             buildLoginDescription(),
             sizedBoxh10(),
             buildLoginForm(),
-
             buildCopyrightMessage(),
           ],
         ),
@@ -104,6 +105,7 @@ class _LoginState extends State<Login> {
             myController: emailController,
             keyboardType: TextInputType.emailAddress,
             labelText: 'Email',
+            placeholderText: 'Enter your email',
             validator: (String? value) {
               if (value!.trim().isEmpty) {
                 return 'Please enter email';
@@ -125,9 +127,13 @@ class _LoginState extends State<Login> {
           sizedBoxh10(),
           MyButton(
             buttonLabel: 'Log In',
-            onPressed: () {
-              submit();
-            },
+            // Login button will be disabled when logging in process
+            onPressed:
+                _isLoggingIn
+                    ? () {}
+                    : () {
+                      submit();
+                    },
             backgroundColor: WidgetStatePropertyAll(
               AppTheme().secondaryColor(),
             ),
@@ -144,6 +150,10 @@ class _LoginState extends State<Login> {
       return;
     }
     if (await NetworkCheck.isConnected()) {
+      // Set login state to true to disable button
+      setState(() {
+        _isLoggingIn = true;
+      });
       EasyLoading.show(status: 'logging in...');
       final AuthProvider provider = Provider.of<AuthProvider>(
         // ignore: use_build_context_synchronously
@@ -151,17 +161,25 @@ class _LoginState extends State<Login> {
         listen: false,
       );
       try {
+        // login with user input credentials
         await provider.login(emailController.text, passwordController.text);
+
+        // Show success message
         EasyLoading.showSuccess('Logged in successfully!');
-        // ignore: avoid_types_as_parameter_names
       } catch (Exception) {
         setState(() {
           errorMessage = Exception.toString().replaceAll('Exception: ', '');
           EasyLoading.showError(errorMessage);
         });
+      } finally {
+        // Reset login state to false to enable button
+        setState(() {
+          _isLoggingIn = false;
+        });
       }
     } else {
-      return EasyLoading.showError('No Internet Connection');
+      // Show error message if no internet connection
+      EasyLoading.showError('No Internet Connection');
     }
   }
 
@@ -170,7 +188,7 @@ class _LoginState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Developed by <YOUR NAME>.',
+          'Developed by EHSSG Internship.',
           style: TextStyle(fontSize: 10),
           textAlign: TextAlign.center,
         ),

@@ -29,10 +29,7 @@ class MyFloatingButton extends StatelessWidget {
                 backgroundColor: backgroundColor ?? AppTheme().secondaryColor(),
                 tooltip: tooltip ?? 'Floating Button',
                 icon: icon,
-                label: Text(
-                  label!,
-                  style: TextStyle(color: AppTheme().primaryLightColor()),
-                ),
+                label: Text(label!, style: AppTheme().buttonLabel()),
               )
               : FloatingActionButton(
                 onPressed: onPressed,

@@ -73,7 +73,7 @@ class MalariaCaseReportController extends ApiController
     (strtolower($record['malaria_parasite']) == 'mixed' ? 'mixed' : null))),
 
                     // Treatment information
-                    'received_treatment' => $record['received_treatment'] === 'Yes', // Whether patient received treatment
+                    'received_treatment' => $record['received_treatment'], // Whether patient received treatment
 
                     // ACT 24 medication
                     'act24' => $record['act_24'] === 'Yes', // Whether ACT 24 was prescribed

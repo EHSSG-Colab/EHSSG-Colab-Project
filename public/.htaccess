@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /internship/25-01/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

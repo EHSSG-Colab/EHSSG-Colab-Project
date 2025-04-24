@@ -1,315 +1,67 @@
-# Table of Contents
-* [Project Specifications](#internship-project-specifications)
-* [Guide guide](#git-guide)
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-***
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-# Internship Project Specifications
-## Introduction
-The application aims to help local community and health network track and manage malaria cases in local communities. This mobile application and web dashboard will replace paper-based reporting systems to improve data accuracy and response time.
+## About Laravel
 
-## Development Tools and Environment Setup
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-### IDE and Development Environments
-1. Visual Studio Code
-   - Version: Latest stable release
-   - Required Extensions:
-     - Flutter/Dart
-     - PHP Intelephense
-     - Laravel Blade formatter
-     - PHP namespace resolver
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-2. Android Studio
-   - Version: Latest stable release
-   - Android Emulator setup
-   - Physical device debugging setup
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-### Backend Development Tools
-1. PHP
-   - Version: 8.1 or higher
+## Learning Laravel
 
-2. MySQL
-   - Version: 8.0 or higher
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-3. Laravel Framework
-   - Version: 10.x
-   - Composer (PHP package manager)
-   - Required packages:
-     - Laravel Sanctum (API authentication)
-     - Laravel Excel (for report exports)
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-4. FilamentPHP
-   - Version: 3.x
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-### Frontend and Mobile Development
-1. Node.js
-   - Version: LTS (18.x or higher)
-   - NPM or Yarn package manager
+## Laravel Sponsors
 
-2. Flutter/Dart SDK
-   - Flutter SDK: Latest stable version
-   - Dart SDK: Latest stable version
-   - Flutter dev tools
-   - Required packages:
-     - sqflite
-     - http
-     - provider
-     - shared_preferences
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Version Control and Collaboration
-1. Git
-   - Latest version
+### Premium Partners
 
-2. Collaboration Tools
-   - Postman (API testing)
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[WebReinvent](https://webreinvent.com/)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Jump24](https://jump24.co.uk)**
+- **[Redberry](https://redberry.international/laravel/)**
+- **[Active Logic](https://activelogic.com)**
+- **[byte5](https://byte5.de)**
+- **[OP.GG](https://op.gg)**
 
-## User Roles and Responsibilities
-* Community health workers who collected field data
-* Supervisors who monitor reports
-* System administrators who manage user accounts
-* Data analysts who need access to aggregate information
+## Contributing
 
-## Data Collection Requirements
-* Patient demographic information
-* Test result and Malaria parasite if positive
-* Medication prescribed
-* Geographical location of cases
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Offline functionality
-* Data collection and local database storage to work offline
-* Data will be stored locally using SQLite database
-* Data synchronization will occur one-way from device to server
-* Data synchronication will happen manually when the user gets online and tap the "Send" button
-* Handling conflicts during sync
+## Code of Conduct
 
-## User Interface Flow
-### Login and Authentication process
-**Account creation**
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-User accounts can be created by the web admin for each user which can be used across multiple devices. User registration is not opened for the mobile app.
+## Security Vulnerabilities
 
-**Web and mobile authentication**
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-Login email and password registered on the web dashboard can be logged in through mobile. On the first login, both web and mobile users can opt to remember on this device.
+## License
 
-Web authentication will store access tokens in the database while mobile authentication will store access tokens in the local database.
-
-### Main Dashboard layout
-
-<img src="assets/malaria-dashboard.svg" style="background:white;" />
-
-
-### Case reporting workflow
-![page1](assets/malaria-add-record01.png)
-
-![page2](assets/malaria-add-record02.png)
-
-![page3](assets/malaria-add-record03.png)
-
-![page4](assets/malaria-add-record04.png)
-
-### Data review and editing capabilities
-In both mobile and web, a readonly view page for review and an edit page reusing the same components without building again.
-
-### Report generation interface
-Report generation to be carried out in web interface. Web tables to view realtime online and download PDF, CSV exports features.
-
-
-## Security and Privacy
-### User Authentication methods
-Authentication in Laravel. Mobile authentication through Laravel auth api.
-
-### Role-based access control
-Role based access control to be carried out in web platform. Will include:
-* Super Admin
-* Admin
-* User
-
-## Technical Architecture
-* Mobile platform (Flutter)
-* Backend framework (Laravel)
-* Database structure
-* API endpoints
-
-## Reporting and Analysis
-
-### Types of Reports
-
-#### Simple Case Report Table
-- Individual case details showing raw data entries
-- Fields include patient information, test results, treatment given, and volunteer details
-- Sortable and filterable by date, location, and volunteer
-- Option to view complete case details for each entry
-
-#### Aggregate Tables
-
-1. Monthly Case Summary
-- Tracks total cases, RDT tests performed, and positive cases by month
-- Monitors referral cases and deaths
-- Helps identify seasonal patterns and trends
-- Key metrics:
-  - Total cases
-  - RDT tests performed
-  - Positive cases
-  - Referral cases
-  - Deaths
-
-2. Treatment Distribution Report
-- Shows treatment types administered monthly
-- Tracks different ACT dosages (ACT24, ACT18, ACT12, ACT6)
-- Monitors chloroquine and primaquine usage
-- Helps with medicine stock management
-
-3. Volunteer Performance Dashboard
-- Performance metrics by volunteer
-- Includes total patients seen, tests performed, and positive cases
-- Geographic coverage (township and village level)
-- Helps identify training needs and high performers
-
-4. Geographic Distribution Analysis
-- Case distribution by township and village
-- Identifies malaria hotspots
-- Tracks positive case rates by location
-- Aids in resource allocation
-
-5. Demographic Analysis Report
-- Age group distribution (<5, 5-15, >15 years)
-- Gender distribution
-- Special categories (pregnancy, under-six-month infant)
-- Helps target interventions for vulnerable groups
-
-### Data Visualization
-- Line graphs for temporal trends
-- Bar charts for treatment comparisons
-- Pie charts for demographic breakdowns
-- Performance dashboards for volunteers
-- Interactive charts with filtering capabilities
-
-### Export Formats
-- CSV for raw data export
-- PDF for printable summaries
-- JSON for system integration
-- Monthly report generation
-
-## Implementation phases
-### Phase 1 Core Features
-* Database structure
-* Web authentication
-* Web API for authentication
-* Setting up mobile authentication
-* Setting up mobile data storage
-* Building mobile case reporting forms
-
-### Phase 2 Enhanced functionality
-* Synchronization
-* Build web interface
-* Basic reporting
-* Data visualization
-
-### Phase 3 Advanced features
-* Automated alerts
-* Data analysis
-
-***
-
-# Git Guide
-
-## Download Git Command Line Interface (CLI)
-* Go to git-scm.com
-* Go to Windows
-* Click Download for Windows
-* Download installer file
-
-## Git Installation
-* Double click to open Git installer
-* Click next and next (you can use default settings)
-* Select Visual Studio Code as the default editor used by git
-* Click Next and leave others as default
-* Click Install
-* Click Finish to complete the installation
-
-## Git initial configuration
-* Open Git bash from start menu
-* Configure git with following commands:
-```bash
-git config --global user.name "your git username"
-```
-
-```bash
-git config --global user.email "your git email"
-```
-* Close the terminal by entering `exit`
-
-## Cloning this repository
-This project is built with Laravel and make sure you have installed Laravel Herd. Check whether you have completed installing Laravel Herd by visiting:
-`C:/<your username>/Herd` from your Windows Explorer. While you're in Windows Explorer and in this directory: `C:/<your username>/Herd/`, go to address bar, select all and type `cmd`. Hit enter to open a command prompt window at this directory.
-Enter the following command:
-```bash
-git clone https://github.com/EHSSG-Colab/EHSSG-Colab-Project.git
-```
-Then change directory
-```bash
-cd EHSSG-Colab-Project
-```
-Open the project from the VSCode
-```bash
-code ./
-```
-
-## Creating new branch
-The main branch of the repository should be the most stable version with minimal bugs. Whenever you starting working on a new feature, you need to create a new feature branch rather than committing directly on the `main`.
-To create a new branch, first checkout the `main`.
-```bash
-git checkout main
-```
-Then pull from main before creating a new branch.
-```bash
-git pull origin main
-```
-Create your new feature branch:
-```bash
-git checkout -b <branch-name>
-```
-You can check your current branch with:
-```bash
-git branch
-```
-
-## Commit and Push your branch
-After you have done contributing the project for the day, you need to `add`, `commit` and `push` your work to the remote repository.
-To add your updated work to the staging area, run:
-```bash
-git add .
-```
-Then commit your updates with commit message inside double quotes.
-```bash
-git commit -m "your commit message"
-```
-Finally, push your updates to your feature branch.
-```bash
-git push -u origin <branch-name>
-```
-If you are pushing it for the first time, you'll be ask to log in your github account. After logging in, the push process to your remote branch is completed.
-
-## Creating a Pull Request
-Unless your updates were merged to `main` branch, your contribution stays in your own branch. After making sure your feature branch is working as expected and thoroughly checked, you can create a pull request to merge your branch to `main`.
-* Go to [Github](https://github.com) and inside your organization, go to the [repository](https://github.com/EHSSG-Colab/EHSSG-Colab-Project).
-* Go to Pull requests tab and click New Pull Request.
-* Select your feature branch
-* Write a PR message in pull request descriptino
-* Click create pull request
-
-## General Rules
-* Keep your main branch up-to-date by `git pull origin main` before starting to code
-* Write clear commit messages
-* In case merge conflicts occured, manage them locally and push.
-
-## If you need help
-- Open a new issue using issue tracker
-- Mention repository maintainers using (@username)
-- Or write a comment under a Pull request
-=======
-# malaria_report_mobile
-
-A new Flutter project.
->>>>>>> c6c81e8 (Flutter Committ)
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Malaria_Report_Laravel

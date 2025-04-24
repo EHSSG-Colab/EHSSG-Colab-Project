@@ -15,4 +15,7 @@ Route::get('malaria-case-reports', [MalariaCaseReportController::class, 'index']
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('malaria-case-reports', [MalariaCaseReportController::class, 'index']);
+
+    // mobile sync route
+    Route::post('mobile-sync', [MalariaCaseReportController::class, 'mobileSync']);
 });

@@ -51,7 +51,7 @@ class MalariaCaseReportController extends ApiController
                 // Map mobile app fields to database fields
                 $malariaCaseData = [
                     // Date and time information
-                    'test_date' => $record['date_of_rdt'], // Date when RDT was performed
+                    'test_date' => date('Y-m-d', strtotime($record['date_of_rdt'])), // Date when RDT was performed
                     'treatment_month' => $record['t_month'], // Treatment month
                     'treatment_year' => $record['t_year'], // Treatment year
 
@@ -59,14 +59,18 @@ class MalariaCaseReportController extends ApiController
                     'patient_name' => $record['patient_name'], // Patient's name
                     'age_unit' => $record['age_unit'], // Unit of age (years, months, etc.)
                     'age' => $record['patient_age'], // Patient's age value
-                    'sex' => $record['patient_sex'], // Patient's sex
+                    'sex' => strtolower(substr($record['patient_sex'], 0, 1)), // Patient's sex (convert 'Male'/'Female' to 'm'/'f')
                     'preg' => $record['is_pregnant'] === 'Yes', // Whether patient is pregnant
                     'lact_mother' => $record['is_lactating_mother'] === 'Yes', // Whether patient is a lactating mother
                     'address' => $record['patient_address'], // Patient's address
 
                     // Test results
                     'rdt_result' => $record['rdt_result'] === 'Positive', // RDT test result
-                    'malaria_parasite' => $record['malaria_parasite'], // Type of malaria parasite
+                    // convert full names to abbreviations
+                    'malaria_parasite' => is_null($record['malaria_parasite']) ? null : 
+    (str_contains(strtolower($record['malaria_parasite']), 'falciparum') ? 'pf' : 
+    (str_contains(strtolower($record['malaria_parasite']), 'vivax') ? 'pv' :
+    (strtolower($record['malaria_parasite']) == 'mixed' ? 'mixed' : null))),
 
                     // Treatment information
                     'received_treatment' => $record['received_treatment'] === 'Yes', // Whether patient received treatment
@@ -98,7 +102,8 @@ class MalariaCaseReportController extends ApiController
                     // Patient status
                     'is_referred' => $record['is_referred'] === 'Yes', // Whether patient was referred
                     'is_dead' => $record['is_dead'] === 'Yes', // Whether patient died
-                    'symptoms' => $record['symptoms'], // Patient's symptoms
+                    // Symptoms - convert to lowercase
+'symptoms' => is_null($record['symptoms']) ? null : strtolower($record['symptoms']),
 
                     // Additional information
                     'travelling_before' => $record['has_travelled'] === 'Yes', // Whether patient traveled before

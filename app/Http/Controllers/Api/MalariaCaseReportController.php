@@ -72,19 +72,19 @@ class MalariaCaseReportController extends ApiController
                     'received_treatment' => $record['received_treatment'] === 'Yes', // Whether patient received treatment
 
                     // ACT 24 medication
-                    'act24' => $record['act24'] === 'Yes', // Whether ACT 24 was prescribed
+                    'act24' => $record['act_24'] === 'Yes', // Whether ACT 24 was prescribed
                     'act24_amount' => (int) $record['act24_count'], // Amount of ACT 24 prescribed
 
                     // ACT 18 medication
-                    'act18' => $record['act18'] === 'Yes', // Whether ACT 18 was prescribed
+                    'act18' => $record['act_18'] === 'Yes', // Whether ACT 18 was prescribed
                     'act18_amount' => (int) $record['act18_count'], // Amount of ACT 18 prescribed
 
                     // ACT 12 medication
-                    'act12' => $record['act12'] === 'Yes', // Whether ACT 12 was prescribed
+                    'act12' => $record['act_12'] === 'Yes', // Whether ACT 12 was prescribed
                     'act12_amount' => (int) $record['act12_count'], // Amount of ACT 12 prescribed
 
                     // ACT 6 medication
-                    'act6' => $record['act6'] === 'Yes', // Whether ACT 6 was prescribed
+                    'act6' => $record['act_6'] === 'Yes', // Whether ACT 6 was prescribed
                     'act6_amount' => (int) $record['act6_count'], // Amount of ACT 6 prescribed
 
                     // Chloroquine medication

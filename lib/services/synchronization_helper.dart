@@ -89,7 +89,7 @@ class SynchronizationHelper {
 
       // Update database for successful sync
       if (successfulIds.isNotEmpty) {
-        await DatabaseHelper.instance.updateAfterSync(successfulIds);
+        await DatabaseHelper().updateAfterSync(successfulIds);
       }
 
       // show notification

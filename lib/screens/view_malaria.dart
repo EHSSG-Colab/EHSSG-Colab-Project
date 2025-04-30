@@ -162,7 +162,6 @@ class _ViewMalariaState extends State<ViewMalaria> {
     return Column(
       children: [
         MyListTile(label: 'Data Collector', value: malaria.reporter_name),
-
         MyListTile(
           label: 'Data Collector Location',
           value: '${malaria.reporter_township} - ${malaria.reporter_village}',

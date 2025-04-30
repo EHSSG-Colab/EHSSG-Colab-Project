@@ -88,4 +88,5 @@ class Malaria {
     required this.remark,
     required this.syncStatus,
   });
+  
 }

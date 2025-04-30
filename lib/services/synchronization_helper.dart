@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:malaria_case_report_01/database/database_helper.dart';
 
+
 class SynchronizationHelper {
   // HANDLING DATA
 
@@ -89,7 +90,7 @@ class SynchronizationHelper {
 
       // Update database for successful sync
       if (successfulIds.isNotEmpty) {
-        await DatabaseHelper.instance.updateAfterSync(successfulIds);
+        await DatabaseHelper().updateAfterSync(successfulIds);
       }
 
       // show notification

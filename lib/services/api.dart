@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +12,15 @@ class ApiService {
   late String errorMessage;
 
   ApiService(this.token);
-  // final String baseUrl = 'https://iasfilenqt.sharedwithexpose.com/api/';
-  final String baseUrl = 'https://9btoa7auny.sharedwithexpose.com/api/';
-  // final String baseUrl = 'http://192.168.1.106:8000/api/';
-  // final String baseUrl = 'http://172.20.20.10:8000/api/';
+  final String baseUrl = 'https://2501.internship.ehssg.org/api/';
+  
+//   ApiService(this.token);
+//   // final String baseUrl = 'https://iasfilenqt.sharedwithexpose.com/api/';
+//   // final String baseUrl = 'https://9btoa7auny.sharedwithexpose.com/api/';
+//   // final String baseUrl = 'http://192.168.1.106:8000/api/';
+//   // final String baseUrl = 'http://172.20.20.10:8000/api/';
+//   final String baseUrl = 'https://8banpyzcdx.sharedwithexpose.com/api/';
+
 
   Future<void> login(String email, String password) async {
     String uri = '${baseUrl}login';
@@ -75,13 +81,19 @@ class ApiService {
   // The json in string format is going to be posted to the api end point as request body
   // The api response will be displayed in map object
   Future<Map<String, dynamic>> postMalariaDataToApi(String data) async {
+    // Get the token from SharedPreferences
+    String? savedToken = await getToken();
+
     // URI to post malaria data
     String malariaUri = '${baseUrl}mobile-sync';
     // Get http client
     http.Client client = http.Client();
     http.Response response = await client.post(
       Uri.parse(malariaUri),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $savedToken',
+      },
       body: data,
     );
     client.close();

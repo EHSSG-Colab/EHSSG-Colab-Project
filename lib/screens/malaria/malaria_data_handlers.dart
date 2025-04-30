@@ -10,10 +10,10 @@ class MalariaDataTransformer {
   static Malaria formDataToModel(MalariaFormData formData, int? id) {
     return Malaria(
       id: id,
-      reporter_id: formData.userInfo['data_collector_id'] ?? '',
-      reporter_name: formData.userInfo['data_collector_name'] ?? '',
-      reporter_township: formData.userInfo['data_collector_township'] ?? '',
-      reporter_village: formData.userInfo['data_collector_village'] ?? '',
+      reporter_id: formData.userInfo['userid'] ?? '',
+      reporter_name: formData.userInfo['userName'] ?? '',
+      reporter_township: formData.userInfo['userTownship'] ?? '',
+      reporter_village: formData.userInfo['userVillage'] ?? '',
       volunteer_id: '', // This would need to be retrieved from the database
       volunteer_name: formData.selectedVolunteer ?? '',
       volunteer_township: formData.volunteerTownshipPlaceholder ?? '',

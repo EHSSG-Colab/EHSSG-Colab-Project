@@ -25,6 +25,7 @@ use App\Filament\Resources\MalariaCaseReportResource\Pages;
 use App\Filament\Resources\MalariaCaseReportResource\Pages\EditMalariaCaseReport;
 use App\Filament\Resources\MalariaCaseReportResource\Pages\ListMalariaCaseReports;
 use App\Filament\Resources\MalariaCaseReportResource\Pages\CreateMalariaCaseReport;
+use App\Services\Appicon;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,8 +33,8 @@ use Illuminate\Database\Eloquent\Builder;
 class MalariaCaseReportResource extends Resource
 {
     protected static ?string $model = MalariaCaseReport::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationIcon = Appicon::CASE_REPORT_ICON;
+    protected static ?string $navigationGroup = 'Case Reports';
 
 
     public static function form(Forms\Form $form): Forms\Form

@@ -47,6 +47,7 @@ class TreatmentDistributionChart extends ChartWidget
         return [
             'datasets' => [
                 [
+                    'label' => 'Antimalaria medications',
                     'data' => $data,
                     'borderWidth' => 1,
                     'backgroundColor' => '#000',

@@ -37,6 +37,7 @@ class VolunteerDistributionChart extends ChartWidget
         return [
             'datasets' => [
                 [
+                    'label' => 'Volunteer Names',
                     'data' => $data,
                     'borderWidth' => 1,
                     'backgroundColor' => '#000',

@@ -9,6 +9,8 @@ class MalariaParasiteDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'Malaria Parasite Distribution';
 
+    protected static ?int $sort = 7;
+
     protected function getData(): array
     {
         // get malaria parasite distribution

@@ -9,6 +9,8 @@ class VolunteerDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'Volunteer Distribution';
 
+    protected static ?int $sort = 3;
+
     protected function getData(): array
     {
         // get volunteer distribution

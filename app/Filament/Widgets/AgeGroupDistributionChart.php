@@ -10,6 +10,8 @@ class AgeGroupDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'Age Group Distribution';
 
+    protected static ?int $sort = 4;
+
     protected function getData(): array
     {
         // get age groups

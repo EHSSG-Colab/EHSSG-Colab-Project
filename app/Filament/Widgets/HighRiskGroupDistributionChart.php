@@ -9,6 +9,8 @@ class HighRiskGroupDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'High risk group distribution';
 
+    protected static ?int $sort = 6;
+
     protected function getData(): array
     {
         // get high risk groups

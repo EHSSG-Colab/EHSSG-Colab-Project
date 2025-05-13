@@ -9,6 +9,8 @@ class TreatmentDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'Treatment Distribution';
 
+    protected static ?int $sort = 2;
+
     protected function getData(): array
     {
         // get treatments
